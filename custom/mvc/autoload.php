@@ -1,5 +1,23 @@
 <?php
-	require_once 'controllers/HelloWorld_controller.php';
-	require_once 'models/HelloWorld_model.php';
+	$dir = opendir('./custom/mvc/controllers');
+	while (($file = readdir($dir)) !== false) {
+	    if ($file !== '.' && $file !== '..') {
+	        require_once './custom/mvc/controllers/'.$file;
+        }
+    }
+
+    $dir = opendir('./custom/mvc/models');
+    while (($file = readdir($dir)) !== false) {
+        if ($file !== '.' && $file !== '..') {
+            require_once './custom/mvc/models/'.$file;
+        }
+    }
+
+    $dir = opendir('./custom/mvc/views');
+    while (($file = readdir($dir)) !== false) {
+        if ($file !== '.' && $file !== '..') {
+            require_once './custom/mvc/views/'.$file;
+        }
+    }
 
 	log_loading_module($date, 'module '.$module_name.'-custom chargé en version '.$module_confs->version);

@@ -4,7 +4,7 @@ class services_manager extends utils implements manager {
 
 	protected static $instence = null;
 
-	protected function __construct() {
+	private function __construct() {
 
 	}
 

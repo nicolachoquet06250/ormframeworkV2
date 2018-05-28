@@ -42,7 +42,7 @@
       "location": "errors",
       "enable": true,
       "disabled": true,
-      "autoload": false,
+      "autoload": true,
       "service": "errors"
     },
     "command": {

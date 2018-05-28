@@ -1,0 +1,6 @@
+Options +FollowSymlinks -Indexes
+RewriteEngine On
+
+RewriteRule	^$                              website/index.html			[L]
+RewriteRule	^rest/(.*)$                      index.php?path=$1          [L]
+RewriteRule	^(.*).(html|json|js)$           website/$1.$2			    [L]
