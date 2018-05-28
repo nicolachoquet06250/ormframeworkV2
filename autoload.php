@@ -76,3 +76,6 @@
 			load_module($module_name, $module_confs, $date);
 		}
 	}
+
+	require_once 'core/services/autoload.php';
+	require_once 'custom/services/autoload.php';
