@@ -1,0 +1,39 @@
+{
+  "modules": {
+    "setup": {
+      "location": "setup",
+      "autoload": true
+    },
+    "mvc": {
+      "location": "mvc",
+      "autoload": true
+    },
+    "annotation": {
+      "location": false,
+      "autoload": false
+    },
+    "dbcontext": {
+      "version": "0.0.1",
+      "location": "entities",
+      "service": "dbcontext",
+      "autoload": false
+    },
+    "translate": {
+      "location": "translate",
+      "autoload": true,
+      "service": "translator"
+    },
+    "errors": {
+      "location": false,
+      "autoload": false
+    },
+    "command": {
+      "location": false,
+      "autoload": false
+    },
+    "sql": {
+      "location": false,
+      "autoload": false
+    }
+  }
+}
