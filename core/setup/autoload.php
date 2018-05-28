@@ -4,6 +4,7 @@
 require_once 'interfaces/manager.php';
 
 // Load classes
+require_once 'router.php';
 require_once 'utils_core.php';
 require_once './custom/setup/utils.php';
 require_once 'error_manager.php';
