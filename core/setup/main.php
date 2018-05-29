@@ -1,11 +1,11 @@
 <?php
 
-class Main
+class main
 {
     private static $instence;
 
     /**
-     * Main constructor.
+     * main constructor.
      * @param $argv
      */
     private function __construct($argv) {
@@ -14,11 +14,11 @@ class Main
 
     /**
      * @param array $argv
-     * @return Main
+     * @return main
      */
     public static function instence($argv) {
         if(self::$instence == null) {
-            self::$instence = new Main($argv);
+            self::$instence = new main($argv);
         }
 
         return self::$instence;

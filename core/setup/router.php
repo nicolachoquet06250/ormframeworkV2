@@ -2,16 +2,23 @@
 
 class router
 {
-	private $tmp_routes = [];
+	private $comments_parsed = [];
     private $routes = [
         'index.htm' => 'index.html',
         'voici_ma_doc.htm'   => 'doc/index.html'
     ];
 
+    private $server;
+
+    public function __construct()
+    {
+        $this->server = $_SERVER['HTTP_HOST'];
+        $this->server .= '/'.basename(json_decode(file_get_contents('./core/ormf-modules-conf.json'))->project_directory);
+    }
+
     private function parse_file($file) {
     	$regex_class_model = '`[\<\?a-zA-Z\t\n]+class\ ([a-zA-Z0-9\_]+)[\.\ a-zA-Z0-9\{\n\t\/\*\@é\\\'\$\_\(\)\ =\;\-\>\}]+`';
     	$regex_1 = '`\/\*\*[\n\t\ ]+([\n\t\ \*\@a-zA-Zé\\\'\$\-\_\.\/ 0-9]+)[\n\t\ ]+ \*\*\/`';
-    	$regex_2 = '`[\t\ \*\+]([@a-zA-Zé\\\'\$\-\_\.\/\] +)`';
 
     	$class = '';
     	$commentaires = [];
@@ -37,7 +44,7 @@ class router
 				$commentaires[$key][$key2] = str_replace('* ', '', $commentaire2);
 
 				//enlèvement des espaces en surplus.
-				preg_replace_callback('`[\ ]+([\@a-zA-Z0-9\ \$\-\_\.é\\\'àùè]+)`', function ($matches) use (&$commentaires, $key2, $key) {
+				preg_replace_callback('`[\ ]+([\@a-zA-Z0-9\ \$\-\_\/\:\.é\\\'àùè]+)`', function ($matches) use (&$commentaires, $key2, $key) {
 					$commentaires[$key][$key2] = $matches[1];
 				}, $commentaires[$key][$key2]);
 				if($commentaire2 === ' *') {
@@ -47,22 +54,57 @@ class router
 			$commentaires[$key][] = '@model '.$class;
 		}
 
+        foreach ($commentaires as $key => $commentaire) {
+            foreach ($commentaire as $k => $v) {
+                $tmp = [];
+                preg_replace_callback('`(\@[&-zA-Z\_\-\/\:]+)\ ([^µ]+)`', function ($matches) use (&$tmp) {
+                    $tmp = [$matches[1], $matches[2]];
+                }, $v);
+                $commentaires[$key][$k] = $tmp;
+            }
+		}
+
+        foreach ($commentaires as $key => $commentaire) {
+            foreach ($commentaire as $k => $v) {
+                if(!empty($v)) {
+                    $commentaires[$key][$v[0]] = $v[1];
+                    if ($v[0] === '@param') {
+                        if (strstr($commentaires[$key][$v[0]], ' ')) {
+                            $commentaires[$key][$v[0]] = explode(' ', $commentaires[$key][$v[0]]);
+                        }
+                    }
+                }
+                unset($commentaires[$key][$k]);
+            }
+            echo "\n";
+		}
+
 		return $commentaires;
 	}
 
     public function route($url) {
 
+        // echo '<pre>';
     	$dir = opendir('./custom/mvc/models');
     	while (($file = readdir($dir)) !== false) {
     		if($file !== '.' && $file !== '..') {
-    			$result = $this->parse_file($file);
-    			var_dump($result);
+    			$this->comments_parsed[] = $this->parse_file($file);
 			}
 		}
 
-		exit();
+        foreach ($this->comments_parsed as $comment) {
+            foreach ($comment as $item => $value) {
+                if (isset($value['@route']) && isset($value['@model']) && isset($value['@method'])) {
+                    $this->routes[$value['@route']] = $value['@model'] . '/' . $value['@method'] . '/';
+                }
+            }
+        }
+		// var_dump($this->routes);
+        // echo '</pre>';
 
-        if(isset($this->routes[$url]) || count(explode('.', $url)) > 1) {
+		// exit();
+
+        if(count(explode('.', $url)) > 1) {
             if(isset($this->routes[$url])) {
                 if (is_file('custom/website/' . $this->routes[$url])) {
                     $type = 'custom';
@@ -104,7 +146,17 @@ class router
             }
         }
         else {
-            Main::instence(utils::http_get('path'));
+            if (isset($this->routes[$url])) {
+                header("Status: 301 Moved Permanently", false, 301);
+                header("Location: http://{$this->server}/rest/{$this->routes[$url]}");
+                /*$json = file_get_contents('http://'.$this->server.'/rest/'.$this->routes[$url]);
+                $json = json_decode($json);
+                $json = json_encode($json);
+
+                echo (new Json_view($json))->display();*/
+            } else {
+                main::instence(utils::http_get('path'));
+            }
         }
     }
 }

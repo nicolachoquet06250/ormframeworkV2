@@ -8,7 +8,7 @@ class HelloWorld_model extends Model {
 	 * @param array $args
 	 * @return Json_view
 	 *
-	 * @route index.php
+	 * @route index
 	 **/
     public function test($args) {
         $entity = new entity_test();
@@ -24,7 +24,7 @@ class HelloWorld_model extends Model {
 	 * @param array $args
 	 * @return Json_view
 	 *
-	 * @route toto.php
+	 * @route toto/lol
 	 **/
 	public function test2($args) {
 		$entity = new entity_test();
@@ -33,4 +33,18 @@ class HelloWorld_model extends Model {
 
 		return new Json_view($entity);
 	}
+
+    /**
+     * @description test 3 de méthode d'un model de test
+     * @method test2
+     * @param array $args
+     * @return Json_view
+     **/
+    public function test3($args) {
+        $entity = new entity_test();
+        $entity->say($args);
+        $entity->toto('test2');
+
+        return new Json_view($entity);
+    }
 }
