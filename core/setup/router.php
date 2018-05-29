@@ -84,8 +84,7 @@ class router
 
     public function route($url) {
 
-        // echo '<pre>';
-    	$dir = opendir('./custom/mvc/models');
+        $dir = opendir('./custom/mvc/models');
     	while (($file = readdir($dir)) !== false) {
     		if($file !== '.' && $file !== '..') {
     			$this->comments_parsed[] = $this->parse_file($file);
@@ -99,10 +98,6 @@ class router
                 }
             }
         }
-		// var_dump($this->routes);
-        // echo '</pre>';
-
-		// exit();
 
         if(count(explode('.', $url)) > 1) {
             if(isset($this->routes[$url])) {
@@ -149,11 +144,6 @@ class router
             if (isset($this->routes[$url])) {
                 header("Status: 301 Moved Permanently", false, 301);
                 header("Location: http://{$this->server}/rest/{$this->routes[$url]}");
-                /*$json = file_get_contents('http://'.$this->server.'/rest/'.$this->routes[$url]);
-                $json = json_decode($json);
-                $json = json_encode($json);
-
-                echo (new Json_view($json))->display();*/
             } else {
                 main::instence(utils::http_get('path'));
             }
