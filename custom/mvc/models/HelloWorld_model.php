@@ -19,7 +19,7 @@ class HelloWorld_model extends Model {
     }
 
 	/**
-	 * @description test 2 de méthode d'un model
+	 * @description test 2 de méthode d'un model de test
 	 * @method test2
 	 * @param array $args
 	 * @return Json_view
