@@ -6,3 +6,9 @@ while (($file = readdir($dir)) !== false) {
         require_once './custom/entities/'.$file;
     }
 }
+
+$fils = [
+
+];
+
+new Autoload($fils, $date, $module_name, $module_confs, 'custom', 'success', DEBUG);

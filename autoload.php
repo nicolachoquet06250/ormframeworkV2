@@ -2,6 +2,10 @@
 
 	ini_set('display_errors', 'on');
 
+	define('DEBUG', true);
+
+	require_once 'core/setup/Autoload.php';
+
 	function log_loading_module($date, $content, $type='success') {
 		$type = $type === 'success' ? 'SUCCESS' : 'ERROR';
 		$logs = file_get_contents("logs/{$date}.log");
@@ -59,13 +63,15 @@
 		}
 	}
 
+	if(DEBUG) {
+		$date = date('Y-m-d_H-i-s');
+		if (!is_dir('./logs')) {
+			mkdir('logs', 0777, true);
+		}
 
-	$date = date('Y-m-d_H-i-s');
-	if(!is_dir('./logs')) {
-		mkdir('logs', 0777, true);
+		file_put_contents("logs/{$date}.log", "\n");
 	}
 
-	file_put_contents("logs/{$date}.log", "\n");
 	foreach ($conf->modules as $module_name => $module_confs) {
 		if($module_confs->disabled) {
 			if($module_confs->enable) {
