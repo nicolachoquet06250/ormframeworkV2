@@ -1,8 +1,8 @@
 <?php
 
-class utils_core {
-	public static function http_get($key='') {
-	    return isset($_GET[$key]) ? $_GET[$key] : null;
+class utils {
+    public static function http_get($key='') {
+        return isset($_GET[$key]) ? $_GET[$key] : null;
     }
 
     public static function http_post($key='') {

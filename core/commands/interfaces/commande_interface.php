@@ -2,5 +2,5 @@
 
 interface commande_interface
 {
-    function exec();
+    public function __call($name, $arguments);
 }

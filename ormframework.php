@@ -1,6 +1,7 @@
 <?php
 
-require_once 'autoload.php';
+require_once 'core/setup/autoload.php';
+require_once 'core/commands/autoload.php';
 
 try {
     command::instence(command::rm_file_name_of_args($argv));

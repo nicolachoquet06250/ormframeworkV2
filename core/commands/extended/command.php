@@ -7,34 +7,31 @@ class command implements commande_interface
 
     /**
      * Commande constructor.
+     * @param $args
      * @throws Exception
      */
-    public function __construct()
+    public function __construct($args = [])
     {
-        $args = func_get_arg(0);
-        var_dump($args);
         if(count($args) > 1) {
             $args = implode('|', $args);
             $args = explode('|do|', $args);
             $args[0] = str_replace('|', '_', $args[0]);
             $args_tmp = $args[1];
             $args_tmp = explode('|-p|', $args_tmp);
-            $args[1] = $args_tmp[0];
+            $args[1] = str_replace('|', '_', $args_tmp[0]);
             $args[2] = explode('|', $args_tmp[1]);
+            $args['class'] = $args[0];
+            $args['method'] = $args[1];
+            $args['args'] = $args[2];
+            unset($args[0]);
+            unset($args[1]);
+            unset($args[2]);
         }
+
         $class = (empty($args)
-            || $args[0] == ''
+            && ( $args[0] == ''
             || $args[0] == "-h"
-            || $args[0] == "--help") ? 'help' : $args[0];
-        unset($args[0]);
-        unset($args[1]);
-        $i = 0;
-        $array = [];
-        foreach ($args as $arg) {
-            $array[$i] = $arg;
-            $i++;
-        }
-        $args = $array;
+            || $args[0] == "--help")) ? 'help' : $args['class'];
 
         $class_path = false;
         if (is_file('custom/commands/' . $class . '.php')) {
@@ -43,33 +40,53 @@ class command implements commande_interface
             $class_path = 'core/commands/' . $class . '.php';
         }
 
-        if ($class_path) {
-            require_once $class_path;
-            if (class_exists($class)) {
-                /**
-                 * @var command $command
-                 */
-                $command = new $class($args);
-                var_dump($class);
-                if($command instanceof command) {
-                    var_dump(get_class_methods($command));
-                    //if(get_class_methods($command))
-                    $command->exec();
+        require_once $class_path;
+        if (class_exists($class)) {
+            /**
+             * @var command $command
+             */
+            $command = new $class($args);
+            if($command instanceof command) {
+                if(isset($args['method'])) {
+                    if(in_array($args['method'], get_class_methods($command))) {
+                        $method = $args['method'];
+                    }
+                    else {
+                        $method = 'exec';
+                    }
                 }
                 else {
-                    throw new Exception("Class {$class} is not a command");
+                    $method = 'exec';
                 }
-            } else {
-                throw new Exception("Command {$class} not found !");
+
+                if(isset($args['args'])) {
+                    $argv = $args['args'];
+                }
+                else {
+                    $argv = [];
+                }
+
+                $command->$method($argv);
             }
-        }
-        else {
+            else {
+                throw new Exception("Class {$class} is not a command");
+            }
+        } else {
             throw new Exception("Command {$class} not found !");
         }
     }
 
-    public function exec()
-    {
+    /**
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     * @throws Exception
+     */
+    public function __call($name, $arguments) {
+        if(in_array($name, get_class_methods(get_class($this)))) {
+            return $this->$name($arguments);
+        }
+        throw new Exception('method `'.$name.'` not found');
     }
 
     /**
@@ -86,12 +103,6 @@ class command implements commande_interface
             $i++;
         }
         return $array;
-    }
-
-    public static function autoload()
-    {
-        require_once 'core/commands/autoload.php';
-        require_once 'custom/commands/autoload.php';
     }
 
     /**

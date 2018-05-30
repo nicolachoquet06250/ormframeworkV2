@@ -4,8 +4,6 @@
 
 	define('DEBUG', true);
 
-	require_once 'core/setup/Autoload.php';
-
 	function log_loading_module($date, $content, $type='success') {
 		$type = $type === 'success' ? 'SUCCESS' : 'ERROR';
 		$logs = file_get_contents("logs/{$date}.log");
