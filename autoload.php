@@ -1,9 +1,5 @@
 <?php
 
-	ini_set('display_errors', 'on');
-
-	define('DEBUG', true);
-
 	function log_loading_module($date, $content, $type='success') {
 		$type = $type === 'success' ? 'SUCCESS' : 'ERROR';
 		$logs = file_get_contents("logs/{$date}.log");

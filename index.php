@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 'on');
+define('DEBUG', true);
+
 require_once 'autoload.php';
 
 try {
