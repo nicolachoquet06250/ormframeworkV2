@@ -1,5 +1,12 @@
 <?php
 
+if(strstr(implode('_', $argv), '--debug') || strstr(implode('_', $argv), '-d')) {
+    define('DEBUG', true);
+}
+else {
+    define('DEBUG', false);
+}
+
 require_once 'core/setup/autoload.php';
 require_once 'core/commands/autoload.php';
 

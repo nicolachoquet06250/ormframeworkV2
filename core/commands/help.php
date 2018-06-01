@@ -7,18 +7,11 @@ class help extends command
     public function __construct()
     {
         $this->commands = [
-            'help' => [
-                'method' => 'exec',
-                'args' => 0
-            ],
-            'hello' => [
+            'help' => [],
+            'hello world' => [
                 [
                     'method' => 'say',
                     'args' => 2
-                ],
-                [
-                    'method' => 'world',
-                    'args' => 1
                 ]
             ]
         ];
@@ -32,8 +25,7 @@ class help extends command
                     ."\n".'php ormframework.php -h'
                     ."\n".'php ormframework.php --help';
             }
-
-            if(isset($details[0])) {
+            if(!empty($details)) {
                 foreach ($details as $detail) {
                     $string = 'php ormframework.php '.$command.' do '.$detail['method'];
                     for ($i = 0, $max = $detail['args']; $i < $max; $i++) {
@@ -42,19 +34,10 @@ class help extends command
                         }
                         $string .= ' < arg ' . $i . ' >';
                     }
-                    echo $string."\n";
+
                 }
             }
-            else {
-                $string .= $details['method'];
-                for ($i = 0, $max = $details['args']; $i < $max; $i++) {
-                    if ($i === 0) {
-                        $string .= ' -p';
-                    }
-                    $string .= ' < arg ' . $i . ' >';
-                }
-                echo $string."\n";
-            }
+            echo $string."\n";
         }
     }
 }

@@ -19,7 +19,7 @@ class command implements commande_interface
             $args_tmp = $args[1];
             $args_tmp = explode('|-p|', $args_tmp);
             $args[1] = str_replace('|', '_', $args_tmp[0]);
-            $args[2] = explode('|', $args_tmp[1]);
+            $args[2] = (isset($args_tmp[1])) ? explode('|', $args_tmp[1]) : [];
             $args['class'] = $args[0];
             $args['method'] = $args[1];
             $args['args'] = $args[2];
@@ -28,11 +28,12 @@ class command implements commande_interface
             unset($args[2]);
         }
 
-        $class = (empty($args)
-            && ( $args[0] == ''
-            || $args[0] == "-h"
-            || $args[0] == "--help")) ? 'help' : $args['class'];
-
+        if(empty($args) || (isset($args[0]) && ($args[0] === null || $args[0] === '-h' || $args[0] === '--help'))) {
+            $class = 'help';
+        }
+        else {
+            $class = $args['class'];
+        }
         $class_path = false;
         if (is_file('custom/commands/' . $class . '.php')) {
             $class_path = 'custom/commands/' . $class . '.php';

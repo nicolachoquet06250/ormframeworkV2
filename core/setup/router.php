@@ -62,6 +62,10 @@ class router extends utils
 		}
 
         foreach ($commentaires as $key => $commentaire) {
+            $commentaires[$key][0] = '@description '.ucfirst($commentaire[0]);
+		}
+
+        foreach ($commentaires as $key => $commentaire) {
             foreach ($commentaire as $k => $v) {
                 $tmp = [];
                 preg_replace_callback('`(\@[&-zA-Z\_\-\/\:]+)\ ([^µ]+)`', function ($matches) use (&$tmp) {
@@ -97,13 +101,11 @@ class router extends utils
                                     $commentaires[$key]['@param'] = [$value];
                                 }
                             }
-                            // var_dump($commentaires[$key]['@param']);
                         }
                     }
                 }
                 unset($commentaires[$key][$k]);
             }
-            echo "\n";
 		}
 
 		return $commentaires;
@@ -149,8 +151,8 @@ class router extends utils
                     $type_retour = explode('_', $method['@return'])[0];
                     $str_html .= "
                     <div class='row'>
-                        <div class='col-12'>
-                            <div class='card-header text-center'>
+                        <div class='col-12' style='border: 1px solid lightgray; -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;'>
+                            <div class='card-header text-center' style='background: white;'>
                                 <h5 class='card-title'>{$method['@method']}</h5>
                             </div>
                             <div class='card-body'>
@@ -185,7 +187,7 @@ class router extends utils
                                         </div>
                                     </div>
                                     <div class='col-12'>
-                                        Type de retour : {$type_retour}
+                                        type de retour : {$type_retour}
                                     </div>
                                     <div class='col-12'>
                                         route => {$method['@route']}
@@ -213,7 +215,7 @@ class router extends utils
                 <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js\" 
                         integrity=\"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl\" 
                         crossorigin=\"anonymous\"></script>";
-        //if(DEBUG)
+        if(DEBUG)
             $str_html .= "<pre>".self::var_dump($comments_parsed)."</pre>";
         $str_html .= "</body>
                 </html>";
@@ -231,6 +233,8 @@ class router extends utils
     			$this->comments_parsed[] = $this->parse_file($file);
 			}
 		}
+
+		$this->get_html_doc();
 
         foreach ($this->comments_parsed as $comment) {
             foreach ($comment as $item => $value) {
@@ -251,7 +255,8 @@ class router extends utils
                 } else {
                     $type = 'core';
 
-                    ${404} = error_manager::instence()->http_error();
+                    //${404} = error_manager::instence()->http_error();
+                    ${404} = $this->get_manager()->error()->http_error();
                     ${404}->code = 404;
                     ${404}->header();
 
@@ -267,7 +272,7 @@ class router extends utils
             else {
                 $type = 'core';
 
-                ${404} = error_manager::instence()->http_error();
+                ${404} = $this->get_manager()->error()->http_error();
                 ${404}->code = 404;
                 ${404}->header();
 

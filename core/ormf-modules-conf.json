@@ -2,6 +2,7 @@
   "project_name": "orm-framework",
   "project_directory": "ormframeworkV2",
   "project_version": "0.0.1",
+  "debug": false,
   "modules": {
     "setup": {
       "version": 1,

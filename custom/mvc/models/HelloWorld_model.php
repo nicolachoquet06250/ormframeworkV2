@@ -6,7 +6,6 @@ class HelloWorld_model extends Model {
      * @description test de méthode d'un model
      * @method test
      * @param mixed $args
-     * @param array $toto
      * @return Json_view
      * @route index
      **/

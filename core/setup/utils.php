@@ -20,4 +20,8 @@ class utils {
         ob_end_clean();
         return $content;
     }
+
+    public function get_manager() {
+        return global_manager::instence();
+    }
 }

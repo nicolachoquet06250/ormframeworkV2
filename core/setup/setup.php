@@ -1,6 +1,6 @@
 <?php
 
-class setup
+class setup extends utils
 {
     /**
      * @var bool $is_assoc
@@ -82,7 +82,7 @@ class setup
         }
         else {
             try {
-                ${404} = (error_manager::instence())->error_404();
+                ${404} = $this->get_manager()->error()->error_404();
                 ${404}->message = "Controller `{$argv['controller']}` not found";
                 ${404}->header();
                 echo (new Json_view(${404}))->display();
