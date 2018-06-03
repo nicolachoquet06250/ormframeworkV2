@@ -9,7 +9,7 @@
       "autoload": true
     },
     "annotation": {
-      "location": false,
+      "location": "annotation",
       "autoload": false
     },
     "dbcontext": {
