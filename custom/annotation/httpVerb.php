@@ -12,12 +12,15 @@ class httpVerb implements annotation_interface
 
     public function get()
     {
-        $httpVerb = ['get' => [], 'post' => [], 'put' => [], 'delete' => [], 'command' => []];
+        $httpVerb = [/*'get' => [], 'post' => [], 'put' => [], 'delete' => [], 'command' => []*/];
         foreach ($this->comments as $comment) {
             foreach ($comment as $item => $value) {
                 if (isset($value['@httpVerb'])) {
-                    $httpVerb[$value['@httpVerb']][] = $value['@model'] . '/' . $value['@method'] . '/@args';
+                	$httpVerb[$value['@model'] . '/' . $value['@method'] . '/@args'] = $value['@httpVerb'];
                 }
+                else {
+					$httpVerb[$value['@model'] . '/' . $value['@method'] . '/@args'] = 'get';
+				}
             }
         }
         return $httpVerb;

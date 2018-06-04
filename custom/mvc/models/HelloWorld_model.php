@@ -8,7 +8,6 @@ class HelloWorld_model extends Model {
      * @param mixed $args
      * @return Json_view
      * @route index
-     * @httpVerb get
      **/
     public function test($args) {
         $entity = new entity_test();
@@ -24,7 +23,6 @@ class HelloWorld_model extends Model {
      * @param array $args
      * @return Json_view
      * @route toto/lol
-     * @httpVerb get
      **/
 	public function test2($args) {
 		$entity = new entity_test();
@@ -41,7 +39,6 @@ class HelloWorld_model extends Model {
      * @return Json_view
      *
      * @route HelloWorld/test3
-     * @httpVerb get
      **/
     public function test3($args) {
         $entity = new entity_test();
