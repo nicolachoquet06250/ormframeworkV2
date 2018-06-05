@@ -1,6 +1,6 @@
 <?php
 
-class model implements annotation_interface {
+class model_annotation implements annotation_interface {
 
 	private $comments = [];
 	public function __construct(array $comments) {
@@ -16,5 +16,11 @@ class model implements annotation_interface {
 			}
 		}
 		return '';
+	}
+
+	public function to_html(int $id, $farmework='bootstrap') {
+		return "<div class='card-header text-center' style='cursor: pointer;'>
+                <h5 class='card-title'>{$this->get()}</h5>
+              </div>";
 	}
 }

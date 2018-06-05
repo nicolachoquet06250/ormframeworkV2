@@ -20,6 +20,7 @@
 		}
 	}
 
+	require_once 'core/services/interfaces/service.php';
 	$conf_core = json_decode(file_get_contents('core/ormf-modules-conf.json'));
 	$conf_custom = json_decode(file_get_contents('custom/ormf-modules-conf.json'));
 	$conf = $conf_core;

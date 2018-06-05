@@ -18,4 +18,14 @@ class description implements annotation_interface {
 		}
 		return $descriptions;
 	}
+
+	public function to_html(int $id, $farmework='bootstrap') {
+		return "<div class='col-12'>
+					<p class='card-text'>
+						<i>
+							{$this->get()[$id]}
+						</i>
+					</p>
+				</div>";
+	}
 }

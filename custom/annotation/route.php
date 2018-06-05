@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../core/annotation/interfaces/annotation_interface.php';
+//require_once '../../core/annotation/interfaces/annotation_interface.php';
 
 class route implements annotation_interface
 {
@@ -23,4 +23,20 @@ class route implements annotation_interface
         }
         return $routes;
     }
+
+	public function to_html(int $id, $farmework='bootstrap') {
+    	$routes = $this->get();
+    	$cmp = 0;
+		foreach ($routes as $route => $alias) {
+			if($cmp === $id) {
+				return "<div class='col-12'>
+						   route => {$route}
+						   <br />
+						   equivalent => {$alias}
+						</div>";
+			}
+			$cmp++;
+    	}
+		return '';
+	}
 }

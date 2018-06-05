@@ -1,9 +1,9 @@
 <?php
 
-//// Load interfaces
+// Load interfaces
 require_once 'interfaces/service.php';
-//
-//// Load classes
+
+// Load classes
 require_once 'my_first_service.php';
 
 if(DEBUG)

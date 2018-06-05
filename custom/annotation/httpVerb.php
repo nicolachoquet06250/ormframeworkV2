@@ -12,7 +12,7 @@ class httpVerb implements annotation_interface
 
     public function get()
     {
-        $httpVerb = [/*'get' => [], 'post' => [], 'put' => [], 'delete' => [], 'command' => []*/];
+        $httpVerb = [];
         foreach ($this->comments as $comment) {
             foreach ($comment as $item => $value) {
                 if (isset($value['@httpVerb'])) {
@@ -25,4 +25,19 @@ class httpVerb implements annotation_interface
         }
         return $httpVerb;
     }
+
+	public function to_html(int $id, $farmework='bootstrap') {
+    	$httpVerbs = $this->get();
+		$cmp = 0;
+    	foreach ($httpVerbs as $route => $httpVerb) {
+    		$httpVerb = strtoupper($httpVerb);
+			if($cmp === $id) {
+				return "<div class='col-12'>
+							Verb HTTP : {$httpVerb}
+						</div>";
+			}
+			$cmp++;
+    	}
+		return '';
+	}
 }

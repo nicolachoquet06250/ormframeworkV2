@@ -227,14 +227,16 @@ class router extends utils
 
     public function route($url) {
 
-        $dir = opendir('./custom/mvc/models');
+    	$models_path = 'custom/mvc/models';
+
+        $dir = opendir('./'.$models_path);
     	while (($file = readdir($dir)) !== false) {
     		if($file !== '.' && $file !== '..') {
     			$this->comments_parsed[] = $this->parse_file($file);
 			}
 		}
 
-		$this->get_html_doc();
+//		$this->get_html_doc();
 
         foreach ($this->comments_parsed as $comment) {
             foreach ($comment as $item => $value) {

@@ -18,4 +18,12 @@ class return_annotation implements annotation_interface {
 		}
 		return $returns;
 	}
+
+	public function to_html(int $id, $farmework='bootstrap') {
+		$returns = $this->get();
+		$return = str_replace('_view', '', $returns[$id]);
+		return "<div class='col-12'>
+                    type de retour : {$return}
+                </div>";
+	}
 }

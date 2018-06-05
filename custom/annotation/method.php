@@ -18,4 +18,10 @@ class method implements annotation_interface {
 		}
 		return $methods;
 	}
+
+	public function to_html(int $id, $farmework='bootstrap') {
+		return "<div class='card-header text-center' style='background: white;'>
+                    <h5 class='card-title'>{$this->get()[$id]}</h5>
+                </div>";
+	}
 }
