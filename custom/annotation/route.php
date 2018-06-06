@@ -11,21 +11,33 @@ class route implements annotation_interface
         $this->comments = $comments;
     }
 
-    public function get()
+    public function get($id=0, $model='')
     {
-        $routes = [];
-        foreach ($this->comments as $comment) {
-            foreach ($comment as $item => $value) {
-                if (isset($value['@route'])) {
-                    $routes[$value['@route']] = $value['@model'] . '/' . $value['@method'] . '/@args';
-                }
-            }
-        }
-        return $routes;
+    	if($model === '') {
+			$routes = [];
+			foreach ($this->comments as $comment) {
+				foreach ($comment as $item => $value) {
+					if (isset($value['@route'])) {
+						$routes[$value['@model']][$value['@route']] = $value['@model'].'/'.$value['@method'].'/@args';
+					}
+				}
+			}
+			return $routes;
+		}
+		else {
+			$i = 0;
+			foreach ($this->comments[__CLASS__][$model] as $alias => $route) {
+				if ($i === $id) {
+					return [$route => $alias];
+				}
+				$i++;
+			}
+			return '';
+		}
     }
 
-	public function to_html(int $id, $farmework='bootstrap') {
-    	$routes = $this->get();
+	public function to_html(int $id, $model='') {
+    	$routes = $this->get($id, $model);
     	$cmp = 0;
 		foreach ($routes as $route => $alias) {
 			if($cmp === $id) {

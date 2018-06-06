@@ -8,7 +8,7 @@ if(DEBUG)
 require_once 'autoload.php';
 
 try {
-	PhpDocParser::instence('custom/mvc/models', true)->model();
+	PhpDocParser::instence('custom/mvc/models', true);//->model();
 	PhpDocParser::instence()->method();
 	PhpDocParser::instence()->description();
 	PhpDocParser::instence()->httpVerb();

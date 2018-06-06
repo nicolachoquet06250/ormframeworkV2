@@ -10,34 +10,39 @@ class httpVerb implements annotation_interface
         $this->comments = $comments;
     }
 
-    public function get()
+    public function get($id=0, $model='')
     {
-        $httpVerb = [];
-        foreach ($this->comments as $comment) {
-            foreach ($comment as $item => $value) {
-                if (isset($value['@httpVerb'])) {
-                	$httpVerb[$value['@model'] . '/' . $value['@method'] . '/@args'] = $value['@httpVerb'];
-                }
-                else {
-					$httpVerb[$value['@model'] . '/' . $value['@method'] . '/@args'] = 'get';
+    	if($model === '') {
+			$httpVerb = [];
+			foreach ($this->comments as $comment) {
+				foreach ($comment as $item => $value) {
+					if (isset($value['@httpVerb'])) {
+						$httpVerb[$value['@model']][$value['@model'].'/'.$value['@method'].'/@args'] = $value['@httpVerb'];
+					} else {
+						$httpVerb[$value['@model']][$value['@model'].'/'.$value['@method'].'/@args'] = 'get';
+					}
 				}
-            }
-        }
-        return $httpVerb;
+			}
+			return $httpVerb;
+		}
+		else {
+			foreach ($this->comments['httpVerb'] as $local_model => $comment) {
+				if($local_model === $model) {
+					$i = 0;
+					foreach ($comment as $route => $verb) {
+						if($i === $id) {
+							return $verb;
+						}
+						$i++;
+					}
+				}
+			}
+		}
     }
 
-	public function to_html(int $id, $farmework='bootstrap') {
-    	$httpVerbs = $this->get();
-		$cmp = 0;
-    	foreach ($httpVerbs as $route => $httpVerb) {
-    		$httpVerb = strtoupper($httpVerb);
-			if($cmp === $id) {
-				return "<div class='col-12'>
-							Verb HTTP : {$httpVerb}
-						</div>";
-			}
-			$cmp++;
-    	}
-		return '';
+	public function to_html(int $id, $model='') {
+    	return "<div class='col-12'>
+					Verb HTTP : {$this->get($id, $model)}
+				</div>";
 	}
 }

@@ -3,6 +3,7 @@
 class HelloWorld_model extends Model {
 
     /**
+	 * @model HelloWorld
      * @description test de méthode d'un model
      * @method test
      * @param mixed $args
@@ -18,6 +19,7 @@ class HelloWorld_model extends Model {
     }
 
     /**
+	 * @model HelloWorld
      * @description test 2 de méthode d'un model de test
      * @method test2
      * @param array $args
@@ -33,11 +35,11 @@ class HelloWorld_model extends Model {
 	}
 
     /**
+	 * @model HelloWorld
      * @description test 3 de méthode d'un model de test
      * @method test3
      * @param array $args
      * @return Json_view
-     *
      * @route HelloWorld/test3
      **/
     public function test3($args) {

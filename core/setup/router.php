@@ -48,7 +48,10 @@ class router extends utils
             if(count($commentaires[$key]) < 2) {
                 $commentaires[$key] = $commentaires[$key][0];
             }
-            $commentaires[$key] = explode("\n", $commentaires[$key]);
+
+            if(gettype($commentaires[$key]) === 'string') {
+				$commentaires[$key] = explode("\n", $commentaires[$key]);
+			}
 
 			foreach ($commentaires[$key] as $key2 => $commentaire2) {
 				$commentaires[$key][$key2] = str_replace(" * ", '', $commentaire2);

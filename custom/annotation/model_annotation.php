@@ -7,20 +7,23 @@ class model_annotation implements annotation_interface {
 		$this->comments = $comments;
 	}
 
-	public function get() {
-		foreach ($this->comments as $comment) {
-			foreach ($comment as $item => $value) {
-				if (isset($value['@model'])) {
-					return $value['@model'];
-				}
+	public function get($id=0) {
+		$i=0;
+		foreach ($this->comments['method'] as $model => $comment) {
+			if($i === $id) {
+				return $model;
 			}
+			$i++;
 		}
 		return '';
 	}
 
-	public function to_html(int $id, $farmework='bootstrap') {
+	public function to_html(int $id, &$farmework=null) {
+		if($farmework)
+			$farmework->model = $this->get($id);
+
 		return "<div class='card-header text-center' style='cursor: pointer;'>
-                <h5 class='card-title'>{$this->get()}</h5>
+                <h5 class='card-title'>{$this->get($id)}</h5>
               </div>";
 	}
 }

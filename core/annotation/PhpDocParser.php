@@ -6,8 +6,8 @@ class PhpDocParser extends utils implements service
 
     private $commentaires = [],
 			$parsing = [],
-			$model = '',
 			$html = '<!DOCTYPE html>';
+    public $model = '';
 
 	/**
 	 * PhpDocParser constructor.
@@ -183,24 +183,25 @@ class PhpDocParser extends utils implements service
     			$id = $arguments[1];
 			}
 			require_once $path;
-			if (strstr($class, 'model')) {
+    		if(strstr($name, 'model')) {
 				if(strstr($method, 'html')) {
-					$this->html .= (new $class($this->commentaires))->$method($id);
-				}
-				else {
-					$this->model = (new $class($this->commentaires))->$method();
-					$this->parsing[$this->model] = [];
-				}
-			} else {
-				if(strstr($method, 'html')) {
-					$html = (new $class($this->commentaires))->$method($id);
+					$html = (new $class($this->parsing))->$method($id, $this);
 					$this->html .= $html;
 					return $html;
 				}
 				else {
-					$this->parsing[$this->model][$class] = (new $class($this->commentaires))->$method();
+					$this->parsing[$class] = (new $class($this->commentaires))->$method();
 				}
 			}
+			 else {
+				 if (strstr($method, 'html')) {
+					 $html       = (new $class($this->parsing))->$method($id, $this->model);
+					 $this->html .= $html;
+					 return $html;
+				 } else {
+					 $this->parsing[$class] = (new $class($this->commentaires))->$method();
+				 }
+			 }
 		}
 		return $this;
     }
@@ -228,10 +229,11 @@ class PhpDocParser extends utils implements service
 <div class='container'>
 	<div class='row' style='height: 15px;'></div>
     <div class='card'>";
-
-		foreach ($this->parsing as $model => $datas) {
-			$this->model('to_html', 0);
-			foreach ($datas['method'] as $id => $method) {
+		$i = 0;
+		foreach ($this->parsing['method'] as $model => $method) {
+			$this->model('to_html', $i);
+			$i++;
+			foreach ($method as $id => $name) {
 
 				if($id > 0) {
 					$this->html .= "
@@ -246,7 +248,7 @@ class PhpDocParser extends utils implements service
 		<div class='card-body'>
 			<div class='row'>
 				<div class='col-12'>";
-				foreach ($datas as $annotation => $value) {
+				foreach ($this->parsing as $annotation => $value) {
 					$this->html .= "<div class='row'>";
 					if($annotation !== 'method') {
 						$this->$annotation('to_html', $id);

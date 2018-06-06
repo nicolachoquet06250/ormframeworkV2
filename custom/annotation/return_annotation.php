@@ -7,21 +7,23 @@ class return_annotation implements annotation_interface {
 		$this->comments = $comments;
 	}
 
-	public function get() {
-		$returns = [];
-		foreach ($this->comments as $comment) {
-			foreach ($comment as $item => $value) {
-				if (isset($value['@return'])) {
-					$returns[] = $value['@return'];
+	public function get($id=0, $model='') {
+		if($model === '') {
+			$returns = [];
+			foreach ($this->comments as $comment) {
+				foreach ($comment as $item => $value) {
+					if (isset($value['@return'])) {
+						$returns[$value['@model']][] = $value['@return'];
+					}
 				}
 			}
+			return $returns;
 		}
-		return $returns;
+		return $this->comments[__CLASS__][$model][$id];
 	}
 
-	public function to_html(int $id, $farmework='bootstrap') {
-		$returns = $this->get();
-		$return = str_replace('_view', '', $returns[$id]);
+	public function to_html(int $id, $model='') {
+		$return = str_replace('_view', '', $this->get($id, $model));
 		return "<div class='col-12'>
                     type de retour : {$return}
                 </div>";

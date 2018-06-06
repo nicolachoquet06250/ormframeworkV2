@@ -1,7 +1,8 @@
 <?php
 
 class Html_view extends view {
-	public function content_type() {
+	public function content_type()
+	{
 		return 'text/html';
 	}
 
