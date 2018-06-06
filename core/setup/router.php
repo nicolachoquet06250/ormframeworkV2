@@ -15,6 +15,10 @@ class router extends utils
         $this->server .= '/'.basename(json_decode(file_get_contents('./core/ormf-modules-conf.json'))->project_directory);
     }
 
+    public static function instence() {
+    	return new router();
+	}
+
     private function parse_file($file) {
     	$regex_class_model = '`[\<\?a-zA-Z\t\n]+class\ ([a-zA-Z0-9\_]+)[\.\ a-zA-Z0-9\{\n\t\/\*\@é\\\'\$\_\(\)\ =\;\-\>\}]+`';
     	$regex_1 = '`\/\*\*[\n\t\ ]+([\n\t\ \*\@a-zA-Zé\\\'\$\-\?\_\.\/ 0-9]+)[\n\t\ ]+ \*\*\/`';

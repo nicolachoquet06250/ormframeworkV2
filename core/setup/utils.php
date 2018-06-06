@@ -2,15 +2,15 @@
 
 class utils {
     public static function http_get($key='') {
-        return isset($_GET[$key]) ? $_GET[$key] : null;
+        return isset($_GET[$key]) ? htmlentities($_GET[$key]) : null;
     }
 
     public static function http_post($key='') {
-        return isset($_POST[$key]) ? $_POST[$key] : null;
+        return isset($_POST[$key]) ? htmlentities($_POST[$key]) : null;
     }
 
     public static function http_files($key='') {
-        return isset($_FILES[$key]) ? $_FILES[$key] : null;
+        return isset($_FILES[$key]) ? htmlentities($_FILES[$key]) : null;
     }
 
     public static function var_dump($var) {

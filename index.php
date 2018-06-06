@@ -16,8 +16,11 @@ try {
 	PhpDocParser::instence()->return();
 	PhpDocParser::instence()->route();
 	PhpDocParser::instence()->to_html('./custom/website/doc/index.html');
-    (new router())
-        ->route(utils::http_get('path'));
+
+	if(!utils::http_get('path')) {
+		$_GET['path'] = htmlentities(str_replace('/?', '', $_SERVER['REQUEST_URI']));
+	}
+    router::instence()->route(utils::http_get('path'));
 }
 catch (Exception $e) {
 	exit($e->getMessage()."\n");
