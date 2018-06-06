@@ -4,9 +4,8 @@ class PhpDocParser extends utils implements service
 {
 	private static $instence = null;
 
-    private $commentaires = [],
-			$parsing = [],
-			$html = '<!DOCTYPE html>';
+    private $commentaires = [], $html = '<!DOCTYPE html>';
+    public $parsing = [];
     public $model = '';
 
 	/**
@@ -17,8 +16,6 @@ class PhpDocParser extends utils implements service
 	 */
     public function __construct($file_or_dir, $directory=false)
     {
-
-
 		if($directory) {
     		$dir = opendir($file_or_dir);
     		while (($file = readdir($dir)) !== false) {

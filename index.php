@@ -20,7 +20,7 @@ try {
 	if(!utils::http_get('path')) {
 		$_GET['path'] = htmlentities(str_replace('/?', '', $_SERVER['REQUEST_URI']));
 	}
-    router::instence()->route(utils::http_get('path'));
+    router::instence()->get_defaults_routes()->route(utils::http_get('path'));
 }
 catch (Exception $e) {
 	exit($e->getMessage()."\n");
