@@ -31,7 +31,7 @@ class httpVerb implements annotation_interface
 					$i = 0;
 					foreach ($comment as $route => $verb) {
 						if($i === $id) {
-							return $verb;
+                            return strtoupper($verb);
 						}
 						$i++;
 					}
