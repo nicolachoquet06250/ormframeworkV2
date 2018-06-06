@@ -38,6 +38,7 @@ class httpVerb implements annotation_interface
 				}
 			}
 		}
+        return '';
     }
 
 	public function to_html(int $id, $model='') {
