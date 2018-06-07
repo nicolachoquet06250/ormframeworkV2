@@ -63,4 +63,49 @@ class add extends command
             throw new Exception("La commande {$to_command} n'existe pas");
         }
     }
+
+    public function module()
+    {
+        $moduleName = $this->get_from_name('module_name') ? $this->get_from_name('module_name') : $this->argv[1];
+        var_dump('module name : ' . $moduleName);
+
+        $autoloadCustom = $this->get_from_name('custom_autoload') ? $this->get_from_name('custom_autoload') : true;
+        $autoloadCustom = ($autoloadCustom === 'false') ? false : true;
+        var_dump($autoloadCustom);
+
+        $autoloadCore = $this->get_from_name('core_autoload') ? $this->get_from_name('core_autoload') : true;
+        $autoloadCore = ($autoloadCore === 'false') ? false : true;
+        var_dump($autoloadCore);
+
+        $pathCustom = $this->get_from_name('custom_path') ? $this->get_from_name('custom_path') : $moduleName;
+        var_dump('path custom : ' . $pathCustom);
+
+        $pathCore = $this->get_from_name('core_path') ? $this->get_from_name('core_path') : $moduleName;
+        var_dump('path core : ' . $pathCore);
+
+        if (is_dir($path = ($this->get_from_name('path') ? $this->get_from_name('path') : $this->argv[0]))) {
+
+            function copy_directory($path_source, $path_dest)
+            {
+                $dir = opendir($path_source);
+                mkdir("{$path_dest}");
+
+                while (($file = readdir($dir)) !== false) {
+                    if ($file !== '.' && $file !== '..' && $file !== '.idea') {
+                        if (is_dir("$path_source/{$file}")) {
+                            copy_directory("$path_source/{$file}", "$path_dest/{$file}");
+                        } else {
+                            copy("$path_source/{$file}", "{$path_dest}/{$file}");
+                        }
+                    }
+                }
+            }
+
+            copy_directory("$path", "custom/{$pathCustom}");
+        } else {
+            if (substr($path, 0, strlen('https://github.com/')) === 'https://github.com/') {
+                exec("git clone {$path} custom/$pathCustom");
+            }
+        }
+    }
 }
