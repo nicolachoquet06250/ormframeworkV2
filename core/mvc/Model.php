@@ -1,6 +1,7 @@
 <?php
 
-class Model implements Model_interface {
+class Model extends utils implements Model_interface
+{
 
     private $is_assoc;
 

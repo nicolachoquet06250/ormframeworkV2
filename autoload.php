@@ -20,42 +20,12 @@
 		}
 	}
 
+require_once 'core/setup/autoload.php';
 	require_once 'core/services/interfaces/service.php';
-	$conf_core = json_decode(file_get_contents('core/ormf-modules-conf.json'));
-	$conf_custom = json_decode(file_get_contents('custom/ormf-modules-conf.json'));
-	$conf = $conf_core;
+require_once 'core/services/autoload.php';
+require_once 'custom/services/autoload.php';
 
-	foreach ($conf_custom as $cnf => $value_cnf) {
-		if(gettype($value_cnf) === 'object') {
-			foreach ($value_cnf as $sous_cnf => $sous_value_cnf) {
-				foreach ($sous_value_cnf as $sous_sous_cnf => $sous_sous_value_cnf) {
-					if($sous_sous_cnf === 'location') {
-						$conf->$cnf->$sous_cnf->$sous_sous_cnf = [
-							'core' => 'core/'.$conf->$cnf->$sous_cnf->$sous_sous_cnf
-						];
-
-						if($sous_sous_value_cnf) {
-							$conf->$cnf->$sous_cnf->$sous_sous_cnf['custom'] = 'custom/'.$sous_sous_value_cnf;
-						}
-
-					}
-					elseif ($sous_sous_cnf === 'autoload') {
-						if($conf->$cnf->$sous_cnf->$sous_sous_cnf !== $sous_sous_value_cnf) {
-							$conf->$cnf->$sous_cnf->$sous_sous_cnf = [
-								'core' => $conf->$cnf->$sous_cnf->$sous_sous_cnf,
-								'custom' => $sous_sous_value_cnf
-							];
-						}
-
-					}
-				}
-
-			}
-		}
-		else {
-			$conf->$cnf = $value_cnf;
-		}
-	}
+$conf = (new utils())->get_manager('services')->conf()->get_modules_conf();
 
 	if(DEBUG) {
 		$date = date('Y-m-d_H-i-s');
@@ -76,6 +46,3 @@
 			load_module($module_name, $module_confs, $date);
 		}
 	}
-
-	require_once 'core/services/autoload.php';
-	require_once 'custom/services/autoload.php';

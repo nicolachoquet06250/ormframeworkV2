@@ -47,8 +47,7 @@ class router extends utils
                 } else {
                     $type = 'core';
 
-                    //${404} = error_manager::instence()->http_error();
-                    ${404} = $this->get_manager()->error()->http_error();
+                    ${404} = $this->get_manager('error')->http_error();
                     ${404}->code = 404;
                     ${404}->header();
 

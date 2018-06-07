@@ -1,9 +1,10 @@
 <?php
 
-class command implements commande_interface
+class command extends utils implements commande_interface
 {
 
     private static $instence;
+    protected $argv = [];
 
     /**
      * Commande constructor.
@@ -16,7 +17,7 @@ class command implements commande_interface
             $args = implode('|', $args);
             $args = explode('|do|', $args);
             $args[0] = str_replace('|', '_', $args[0]);
-            $args_tmp = $args[1];
+            $args_tmp = isset($args[1]) ? $args[1] : '';
             $args_tmp = explode('|-p|', $args_tmp);
             $args[1] = str_replace('|', '_', $args_tmp[0]);
             $args[2] = (isset($args_tmp[1])) ? explode('|', $args_tmp[1]) : [];
@@ -66,8 +67,8 @@ class command implements commande_interface
                 else {
                     $argv = [];
                 }
-
-                $command->$method($argv);
+                $this->argv = $argv;
+                (new $class($argv))->$method($argv);
             }
             else {
                 throw new Exception("Class {$class} is not a command");
@@ -116,5 +117,19 @@ class command implements commande_interface
             self::$instence = new command(func_get_arg(0));
         }
         return self::$instence;
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function get_from_name($name)
+    {
+        foreach ($this->argv as $arg) {
+            if (substr($arg, 0, strlen($name)) === $name) {
+                return explode('=', $arg)[1];
+            }
+        }
+        return null;
     }
 }

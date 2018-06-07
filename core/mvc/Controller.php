@@ -1,6 +1,7 @@
 <?php
 
-class Controller implements Controller_interface {
+class Controller extends utils implements Controller_interface
+{
 
     private $method, $args, $is_assoc;
 
@@ -15,10 +16,21 @@ class Controller implements Controller_interface {
         return $this->is_assoc;
     }
 
+    /**
+     * @return view
+     * @throws Exception
+     */
     public function response(): view
     {
         $model = str_replace('_controller', '_model', get_class($this));
         $method = $this->method;
-        return (new $model($this->is_assoc()))->$method($this->args);
+        if (in_array($method, get_class_methods($model))) {
+            return (new $model($this->is_assoc()))->$method($this->args);
+        }
+        ${404} = $this->get_manager('error')->error_404();
+        $model = str_replace('_model', '', $model);
+        ${404}->message = "method `{$method}` not found in model `{$model}`";
+        ${404}->header();
+        throw new Exception((new Json_view(${404}))->display());
     }
 }

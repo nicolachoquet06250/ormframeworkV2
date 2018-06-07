@@ -82,7 +82,7 @@ class setup extends utils
         }
         else {
             try {
-                ${404} = $this->get_manager()->error()->error_404();
+                ${404} = $this->get_manager('error')->error_404();
                 ${404}->message = "Controller `{$argv['controller']}` not found";
                 ${404}->header();
                 echo (new Json_view(${404}))->display();

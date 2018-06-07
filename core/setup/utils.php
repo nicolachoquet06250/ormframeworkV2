@@ -21,7 +21,8 @@ class utils {
         return $content;
     }
 
-    public function get_manager() {
-        return global_manager::instence();
+    public function get_manager($type = null)
+    {
+        return $type ? global_manager::instence()->$type() : global_manager::instence();
     }
 }

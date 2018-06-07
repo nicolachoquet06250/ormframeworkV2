@@ -6,15 +6,7 @@ class help extends command
 
     public function __construct()
     {
-        $this->commands = [
-            'help' => [],
-            'hello world' => [
-                [
-                    'method' => 'say',
-                    'args' => 2
-                ]
-            ]
-        ];
+        $this->commands = json_decode(file_get_contents('core/commands/enable_commands.json'), true);
     }
 
     public function exec() {
@@ -24,6 +16,7 @@ class help extends command
                 $string = 'php ormframework.php'
                     ."\n".'php ormframework.php -h'
                     ."\n".'php ormframework.php --help';
+                echo $string . "\n";
             }
             if(!empty($details)) {
                 foreach ($details as $detail) {
@@ -34,10 +27,9 @@ class help extends command
                         }
                         $string .= ' < arg ' . $i . ' >';
                     }
-
+                    echo $string . "\n";
                 }
             }
-            echo $string."\n";
         }
     }
 }
