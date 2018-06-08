@@ -67,21 +67,12 @@ class add extends command
     public function module()
     {
         $moduleName = $this->get_from_name('module_name') ? $this->get_from_name('module_name') : $this->argv[1];
-        var_dump('module name : ' . $moduleName);
-
         $autoloadCustom = $this->get_from_name('custom_autoload') ? $this->get_from_name('custom_autoload') : true;
         $autoloadCustom = ($autoloadCustom === 'false') ? false : true;
-        var_dump($autoloadCustom);
-
         $autoloadCore = $this->get_from_name('core_autoload') ? $this->get_from_name('core_autoload') : true;
         $autoloadCore = ($autoloadCore === 'false') ? false : true;
-        var_dump($autoloadCore);
-
         $pathCustom = $this->get_from_name('custom_path') ? $this->get_from_name('custom_path') : $moduleName;
-        var_dump('path custom : ' . $pathCustom);
-
         $pathCore = $this->get_from_name('core_path') ? $this->get_from_name('core_path') : $moduleName;
-        var_dump('path core : ' . $pathCore);
 
         if (is_dir($path = ($this->get_from_name('path') ? $this->get_from_name('path') : $this->argv[0]))) {
 
@@ -101,7 +92,30 @@ class add extends command
                 }
             }
 
+            // partie custom
+            // copie de la lib dans un module
             copy_directory("$path", "custom/{$pathCustom}");
+            if ($autoloadCustom) {
+                if (!is_file("custom/{$pathCustom}/autoload.php")) {
+                    file_put_contents("custom/{$pathCustom}/autoload.php", "<?php
+    require_once 'Autoload.php';
+    Auto::load();
+                
+    if(DEBUG)
+        log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);");
+                }
+            }
+
+            // partie core
+            // création du répertoire
+            mkdir("core/{$pathCore}");
+            if ($autoloadCore) {
+                file_put_contents("core/{$pathCore}/autoload.php", "<?php
+                
+    if(DEBUG)
+        log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
+            }
+
         } else {
             if (substr($path, 0, strlen('https://github.com/')) === 'https://github.com/') {
                 exec("git clone {$path} custom/$pathCustom");
