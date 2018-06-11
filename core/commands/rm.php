@@ -66,4 +66,31 @@ class rm extends command
             throw new Exception("La methode {$name} n'existe pas dans la commande {$from_command}");
         }
     }
+
+    public function module() {
+        $module = $this->get_from_name('module');
+        $conf = $this->get_manager('services')->conf()->get_modules_conf();
+
+        function rmdir_recursif($path) {
+            $dir = opendir($path);
+            while (($file = readdir($dir)) !== false) {
+                if($file !== '.' && $file !== '..') {
+                    if(is_dir($path.'/'.$file)) {
+                        rmdir_recursif($path.'/'.$file);
+                        rmdir($path.'/'.$file);
+                    }
+                    else {
+                        unlink($path.'/'.$file);
+                    }
+                }
+            }
+        }
+
+        rmdir_recursif("{$conf->modules->$module->location['core']}");
+        rmdir("{$conf->modules->$module->location['core']}");
+        rmdir_recursif("{$conf->modules->$module->location['custom']}");
+        rmdir("{$conf->modules->$module->location['custom']}");
+
+        $this->get_manager('services')->conf()->remove_module($module);
+    }
 }

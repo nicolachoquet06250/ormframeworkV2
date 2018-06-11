@@ -73,6 +73,24 @@ class add extends command
         $autoloadCore = ($autoloadCore === 'false') ? false : true;
         $pathCustom = $this->get_from_name('custom_path') ? $this->get_from_name('custom_path') : $moduleName;
         $pathCore = $this->get_from_name('core_path') ? $this->get_from_name('core_path') : $moduleName;
+        $moduleVersion = $this->get_from_name('version') ? $this->get_from_name('version') : '0.0.1';
+
+        $moduleCore = [
+            "version" => $moduleVersion,
+            "location" => $pathCore,
+            "enable" => true,
+            "autoload" => $autoloadCore
+        ];
+
+        $moduleCustom = [
+            "version" => $moduleVersion,
+            "autoload" => $autoloadCustom,
+            "location" => $pathCustom
+        ];
+
+        if(isset($this->get_manager('services')->conf()->get_modules_conf()->modules->$moduleName)) {
+            throw new Exception("Le module {$moduleName} exite déja");
+        }
 
         if (is_dir($path = ($this->get_from_name('path') ? $this->get_from_name('path') : $this->argv[0]))) {
 
@@ -91,34 +109,39 @@ class add extends command
                     }
                 }
             }
-
             // partie custom
             // copie de la lib dans un module
             copy_directory("$path", "custom/{$pathCustom}");
             if ($autoloadCustom) {
                 if (!is_file("custom/{$pathCustom}/autoload.php")) {
                     file_put_contents("custom/{$pathCustom}/autoload.php", "<?php
-    require_once 'Autoload.php';
-    Auto::load();
-                
-    if(DEBUG)
-        log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);");
+        require_once 'Autoload.php';
+        Auto::load();
+                    
+        if(DEBUG)
+            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);");
                 }
             }
+            $this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
 
             // partie core
             // création du répertoire
             mkdir("core/{$pathCore}");
             if ($autoloadCore) {
                 file_put_contents("core/{$pathCore}/autoload.php", "<?php
-                
-    if(DEBUG)
-        log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
+                    
+        if(DEBUG)
+            log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
             }
+            $this->get_manager('services')->conf()->add_module('core', $moduleName, $moduleCore);
 
         } else {
             if (substr($path, 0, strlen('https://github.com/')) === 'https://github.com/') {
+                mkdir("core/{$pathCore}");
+                $this->get_manager('services')->conf()->add_module('core', $moduleName, $moduleCore);
+
                 exec("git clone {$path} custom/$pathCustom");
+                $this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
             }
         }
     }
