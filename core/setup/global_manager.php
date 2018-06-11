@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class global_manager
+ *
+ * @method error_manager error_manager()
+ * @method services_manager service_manager()
+ */
 class global_manager implements manager
 {
 

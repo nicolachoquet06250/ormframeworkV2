@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class services_manager
+ *
+ * @method my_first_service my_first_service()
+ */
 class services_manager extends utils implements manager {
 
 	protected static $instence = null;

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Class error_manager
+ *
+ * @method http_error error_404()
+ * @method http_error error_500()
+ * @method http_error http_error()
+ * @method http_error code_200()
+ */
 
 class error_manager extends utils implements manager
 {
