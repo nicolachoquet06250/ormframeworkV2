@@ -2,8 +2,19 @@
 
 namespace ormframework\custom\mvc\models;
 
+use \ormframework\custom\db_context\entity_test;
+use \ormframework\custom\mvc\views\Json_view;
+use \ormframework\custom\setup\utils;
+
 
 class HelloWorld_model extends \ormframework\core\mvc\Model {
+
+    private $my_utils;
+    public function __construct($is_assoc)
+    {
+        parent::__construct($is_assoc);
+        $this->my_utils = new utils();
+    }
 
     /**
 	 * @model HelloWorld
@@ -48,7 +59,7 @@ class HelloWorld_model extends \ormframework\core\mvc\Model {
     public function test3($args) {
         $entity = new entity_test();
         $entity->say($args);
-        $entity->toto('test2');
+        $entity->toto($this->my_utils->helloWorld());
 
         return new Json_view($entity);
     }

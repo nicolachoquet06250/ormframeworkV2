@@ -13,7 +13,7 @@ use \ormframework\core\errors\http_error;
  * @method http_error code_200()
  */
 
-class error_manager extends \ormframework\core\setup\core_utils implements \ormframework\core\setup\interfaces\manager
+class error_manager extends \ormframework\core\setup\utils implements \ormframework\core\setup\interfaces\manager
 {
 
     protected static $instence = null;

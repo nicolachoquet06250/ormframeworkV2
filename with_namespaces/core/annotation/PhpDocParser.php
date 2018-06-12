@@ -2,7 +2,16 @@
 
 namespace ormframework\core\annotation;
 
-class PhpDocParser extends \ormframework\core\setup\core_utils
+use ormframework\custom\annotations\method;
+
+/**
+ * Class PhpDocParser
+ *
+ * @method PhpDocParser|string method($type, $id)
+ * @method PhpDocParser|string model($type, $id)
+ */
+
+class PhpDocParser extends \ormframework\core\setup\utils
 {
 	private static $instence = null;
 
@@ -22,7 +31,7 @@ class PhpDocParser extends \ormframework\core\setup\core_utils
     		$dir = opendir($file_or_dir);
     		while (($file = readdir($dir)) !== false) {
     			if($file !== '.' && $file !== '..') {
-    				$this->commentaires[] = $this->parse_file($file_or_dir.'/'.$file);
+    			    $this->commentaires[] = $this->parse_file($file_or_dir.'/'.$file);
 				}
 			}
 		}
@@ -151,7 +160,7 @@ class PhpDocParser extends \ormframework\core\setup\core_utils
 	/**
 	 * @param $name
 	 * @param $arguments
-	 * @return PhpDocParser
+	 * @return PhpDocParser|string
 	 */
     public function __call($name, $arguments)
     {
@@ -182,6 +191,11 @@ class PhpDocParser extends \ormframework\core\setup\core_utils
     			$id = $arguments[1];
 			}
 			require_once $path;
+
+			if($class) {
+			    $class = "\ormframework\custom\annotations\\$class";
+            }
+
     		if(strstr($name, 'model')) {
 				if(strstr($method, 'html')) {
 					$html = (new $class($this->parsing))->$method($id, $this);
@@ -198,7 +212,6 @@ class PhpDocParser extends \ormframework\core\setup\core_utils
 				 	$this->html .= $html;
 					 return $html;
 				 } else {
-				 	$class = '\\ormframework\\custom\\annotations\\'.$class;
 				 	$this->parsing[$class] = (new $class($this->commentaires))->$method();
 				 }
 			 }
@@ -212,6 +225,7 @@ class PhpDocParser extends \ormframework\core\setup\core_utils
 	 */
     public function to_html($path)
     {
+
     	$this->html = "<html>
     <head>
         <meta name='viewport' 
@@ -230,11 +244,10 @@ class PhpDocParser extends \ormframework\core\setup\core_utils
 	<div class='row' style='height: 15px;'></div>
     <div class='card'>";
 		$i = 0;
-		foreach ($this->parsing['method'] as $model => $method) {
+		foreach ($this->parsing['\ormframework\custom\annotations\method'] as $model => $method) {
 			$this->model('to_html', $i);
 			$i++;
 			foreach ($method as $id => $name) {
-
 				if($id > 0) {
 					$this->html .= "
 		<div class='row'>
@@ -249,6 +262,7 @@ class PhpDocParser extends \ormframework\core\setup\core_utils
 			<div class='row'>
 				<div class='col-12'>";
 				foreach ($this->parsing as $annotation => $value) {
+                    $annotation = str_replace('\ormframework\custom\annotations\\', '', $annotation);
 					$this->html .= "<div class='row'>";
 					if($annotation !== 'method') {
 						$this->$annotation('to_html', $id);

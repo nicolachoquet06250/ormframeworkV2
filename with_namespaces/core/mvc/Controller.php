@@ -6,7 +6,7 @@ use \Exception;
 use \ormframework\custom\mvc\views\Json_view;
 use ormframework\core\mvc\interfaces\Controller_interface;
 
-class Controller extends \ormframework\core\setup\core_utils implements Controller_interface
+class Controller extends \ormframework\core\setup\utils implements Controller_interface
 {
 
     private $method, $args, $is_assoc;
@@ -29,7 +29,9 @@ class Controller extends \ormframework\core\setup\core_utils implements Controll
     public function response(): view
     {
         $model = str_replace('_controller', '_model', get_class($this));
+        $model = str_replace('controllers', 'models', $model);
         $method = $this->method;
+
         if(get_class_methods($model)) {
 			if (in_array($method, get_class_methods($model))) {
 				return (new $model($this->is_assoc()))->$method($this->args);

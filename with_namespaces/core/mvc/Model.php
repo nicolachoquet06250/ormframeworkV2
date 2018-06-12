@@ -2,7 +2,7 @@
 
 namespace ormframework\core\mvc;
 
-class Model extends \ormframework\core\setup\core_utils implements \ormframework\core\mvc\interfaces\Model_interface
+class Model extends \ormframework\core\setup\utils implements \ormframework\core\mvc\interfaces\Model_interface
 {
 
     private $is_assoc;

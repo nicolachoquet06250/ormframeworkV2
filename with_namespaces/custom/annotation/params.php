@@ -21,7 +21,7 @@ class params implements \ormframework\core\annotation\interfaces\annotation_inte
 			}
 			return $params;
 		}
-		return $this->comments['params'][$model][$id];
+		return $this->comments['\ormframework\custom\annotations\params'][$model][$id];
 	}
 
 	public function to_html(int $id, $model='') {

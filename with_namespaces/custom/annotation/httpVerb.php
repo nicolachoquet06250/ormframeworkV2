@@ -28,7 +28,7 @@ class httpVerb implements \ormframework\core\annotation\interfaces\annotation_in
 			return $httpVerb;
 		}
 		else {
-			foreach ($this->comments['httpVerb'] as $local_model => $comment) {
+			foreach ($this->comments['\ormframework\custom\annotations\httpVerb'] as $local_model => $comment) {
 				if($local_model === $model) {
 					$i = 0;
 					foreach ($comment as $route => $verb) {

@@ -21,7 +21,7 @@ class return_annotation implements \ormframework\core\annotation\interfaces\anno
 			}
 			return $returns;
 		}
-		return $this->comments[__CLASS__][$model][$id];
+		return $this->comments['\\'.__CLASS__][$model][$id];
 	}
 
 	public function to_html(int $id, $model='') {

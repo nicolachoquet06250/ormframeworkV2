@@ -11,7 +11,7 @@ use \ormframework\core\services\interfaces\service;
  * @method \ormframework\core\services\my_first_service my_first_service()
  * @method \conf										conf()
  */
-class services_manager extends \ormframework\core\setup\core_utils implements \ormframework\core\setup\interfaces\manager {
+class services_manager extends \ormframework\core\setup\utils implements \ormframework\core\setup\interfaces\manager {
 
 	protected static $instence = null;
 

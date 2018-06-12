@@ -4,7 +4,7 @@ namespace ormframework\core\setup;
 
 use \Exception;
 
-class setup extends core_utils
+class setup extends utils
 {
     /**
      * @var bool $is_assoc
@@ -91,7 +91,7 @@ class setup extends core_utils
                 ${404} = $this->get_manager('error')->error_404();
                 ${404}->message = "Controller `{$argv['controller']}` not found";
                 ${404}->header();
-                echo (new \Json_view(${404}))->display();
+                echo (new \ormframework\custom\mvc\views\Json_view(${404}))->display();
             }
             catch (Exception $e) {
                 exit($e->getMessage());

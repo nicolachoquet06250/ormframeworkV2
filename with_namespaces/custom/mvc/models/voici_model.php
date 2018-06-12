@@ -3,6 +3,7 @@
 namespace ormframework\custom\mvc\models;
 
 use \ormframework\core\annotation\PhpDocParser;
+use \ormframework\custom\mvc\views\Html_view;
 
 class voici_model extends \ormframework\core\mvc\Model {
 

@@ -4,7 +4,7 @@ namespace ormframework\core\commands;
 
 use \Exception;
 
-class command extends \ormframework\core\setup\core_utils implements \ormframework\core\commands\interfaces\commande_interface
+class command extends \ormframework\core\setup\utils implements \ormframework\core\commands\interfaces\commande_interface
 {
 
     private static $instence;

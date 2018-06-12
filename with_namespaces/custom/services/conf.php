@@ -1,6 +1,6 @@
 <?php
 
-class conf extends \ormframework\core\setup\core_utils implements \ormframework\core\services\interfaces\service
+class conf extends \ormframework\custom\setup\utils implements \ormframework\core\services\interfaces\service
 {
 
     public function __call($name, $arguments)

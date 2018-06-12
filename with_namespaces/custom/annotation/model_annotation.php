@@ -11,7 +11,7 @@ class model_annotation implements \ormframework\core\annotation\interfaces\annot
 
 	public function get($id=0) {
 		$i=0;
-		foreach ($this->comments['method'] as $model => $comment) {
+		foreach ($this->comments['\ormframework\custom\annotations\method'] as $model => $comment) {
 			if($i === $id) {
 				return $model;
 			}

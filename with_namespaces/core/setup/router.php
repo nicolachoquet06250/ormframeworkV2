@@ -3,12 +3,13 @@
 namespace ormframework\core\setup;
 
 use \ormframework\core\annotation\PhpDocParser;
-use \ormframework\core\setup\core_utils;
+use \ormframework\core\setup\utils;
 
-class router extends core_utils
+class router extends utils
 {
     private $routes;
     private $server;
+    private $namespace = '\\ormframework\\custom\\annotations\\';
 
     public function __construct()
     {
@@ -34,8 +35,7 @@ class router extends core_utils
      * @return router
      */
     public function route($url) {
-
-        foreach (PhpDocParser::instence()->parsing['route'] as $model => $routes) {
+        foreach (PhpDocParser::instence()->parsing[$this->namespace.'route'] as $model => $routes) {
             foreach ($routes as $alias => $route) {
                 $this->routes[$alias] = $route;
             }
@@ -87,7 +87,7 @@ class router extends core_utils
                 header("Status: 301 Moved Permanently", false, 301);
                 header("Location: http://{$this->server}/rest/{$this->routes[$url]}");
             } else {
-                main::instence(core_utils::http_get('path'));
+                main::instence(utils::http_get('path'));
             }
         }
         return $this;

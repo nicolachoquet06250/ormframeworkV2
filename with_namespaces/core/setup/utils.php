@@ -2,7 +2,7 @@
 
 namespace ormframework\core\setup;
 
-class core_utils {
+class utils {
     public static function http_get($key='') {
         return isset($_GET[$key]) ? htmlentities($_GET[$key]) : null;
     }

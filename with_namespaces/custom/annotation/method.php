@@ -21,7 +21,7 @@ class method implements \ormframework\core\annotation\interfaces\annotation_inte
 			}
 			return $methods;
 		}
-		return $this->comments['method'][$model][$id];
+		return $this->comments['\ormframework\custom\annotations\method'][$model][$id];
 	}
 
 	public function to_html(int $id, $model='') {

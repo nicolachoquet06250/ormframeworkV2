@@ -2,7 +2,7 @@
 
 namespace ormframework\core\mvc;
 
-class view extends \ormframework\core\setup\core_utils implements \ormframework\core\mvc\interfaces\view_interface
+class view extends \ormframework\core\setup\utils implements \ormframework\core\mvc\interfaces\view_interface
 {
     protected $data;
 
