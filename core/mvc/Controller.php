@@ -1,6 +1,6 @@
 <?php
 
-class Controller extends utils implements Controller_interface
+class Controller extends core_utils implements Controller_interface
 {
 
     private $method, $args, $is_assoc;

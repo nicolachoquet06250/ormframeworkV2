@@ -1,6 +1,6 @@
 <?php
 
-require_once 'utils.php';
+require_once 'core_utils.php';
 require_once 'interfaces/manager.php';
 require_once 'managers/error_manager.php';
 require_once 'managers/services_manager.php';

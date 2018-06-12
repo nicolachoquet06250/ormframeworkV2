@@ -1,6 +1,6 @@
 <?php
 
-class utils {
+class core_utils {
     public static function http_get($key='') {
         return isset($_GET[$key]) ? htmlentities($_GET[$key]) : null;
     }
@@ -21,6 +21,10 @@ class utils {
         return $content;
     }
 
+	/**
+	 * @param null $type
+	 * @return services_manager|error_manager|global_manager
+	 */
     public function get_manager($type = null)
     {
         return $type ? global_manager::instence()->$type() : global_manager::instence();

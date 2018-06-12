@@ -1,6 +1,6 @@
 <?php
 
-class conf extends utils implements service
+class conf extends core_utils implements service
 {
 
     public function __call($name, $arguments)
@@ -8,11 +8,15 @@ class conf extends utils implements service
         return $this->$name($arguments);
     }
 
+	/**
+	 * @param string $type
+	 * @return array
+	 */
     public function get_modules_conf($type='all')
     {
 
-        $conf_core = json_decode(file_get_contents('core/ormf-modules-conf.json'));
-        $conf_custom = json_decode(file_get_contents('custom/ormf-modules-conf.json'));
+        $conf_core = (array)json_decode(file_get_contents('core/ormf-modules-conf.json'));
+        $conf_custom = (array)json_decode(file_get_contents('custom/ormf-modules-conf.json'));
 
         if($type === 'all') {
             $conf = $conf_core;
@@ -47,7 +51,12 @@ class conf extends utils implements service
         return $conf;
     }
 
-    public function set_module_conf(string $type, $name, $module=null) {
+	/**
+	 * @param string $type
+	 * @param string $name
+	 * @param null|array   $module
+	 */
+    private function set_module_conf(string $type, string $name, $module=null) {
         $conf = $this->get_modules_conf($type);
         if($module) {
             $conf->modules->$name = $module;
@@ -58,23 +67,42 @@ class conf extends utils implements service
         file_put_contents($type.'/ormf-modules-conf.json', json_encode($conf));
     }
 
-    public function add_module(string $type,string $name, array $module) {
+	/**
+	 * @param string $type
+	 * @param string $name
+	 * @param null|array   $module
+	 */
+    public function add_module(string $type, string $name, array $module) {
         $this->set_module_conf($type, $name, $module);
     }
 
+	/**
+	 * @param string $name
+	 * @return array
+	 */
     public function remove_module(string $name) {
         $this->set_module_conf('core', $name);
         $this->set_module_conf('custom', $name);
+        return [
+        	'core' => $this->get_modules_conf('core'),
+			'custom' => $this->get_modules_conf('custom')
+		];
     }
 
+	/**
+	 * @return array
+	 */
     public function get_sql_conf()
     {
-        return json_decode(file_get_contents('custom/ormf-sql-conf.json'));
+        return (array)json_decode(file_get_contents('custom/ormf-sql-conf.json'));
     }
 
+	/**
+	 * @return array
+	 */
     public function get_router()
     {
-        return json_decode(file_get_contents('custom/router.json'));
+        return (array)json_decode(file_get_contents('custom/router.json'));
     }
 
 

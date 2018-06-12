@@ -1,6 +1,6 @@
 <?php
 
-class command extends utils implements commande_interface
+class command extends core_utils implements commande_interface
 {
 
     private static $instence;

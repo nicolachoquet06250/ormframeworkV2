@@ -1,6 +1,6 @@
 <?php
 
-class router extends utils
+class router extends core_utils
 {
     private $routes;
     private $server;
@@ -82,7 +82,7 @@ class router extends utils
                 header("Status: 301 Moved Permanently", false, 301);
                 header("Location: http://{$this->server}/rest/{$this->routes[$url]}");
             } else {
-                main::instence(utils::http_get('path'));
+                main::instence(core_utils::http_get('path'));
             }
         }
         return $this;

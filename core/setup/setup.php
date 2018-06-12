@@ -1,6 +1,6 @@
 <?php
 
-class setup extends utils
+class setup extends core_utils
 {
     /**
      * @var bool $is_assoc

@@ -4,8 +4,9 @@
  * Class services_manager
  *
  * @method my_first_service my_first_service()
+ * @method conf				conf()
  */
-class services_manager extends utils implements manager {
+class services_manager extends core_utils implements manager {
 
 	protected static $instence = null;
 

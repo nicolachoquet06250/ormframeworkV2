@@ -1,6 +1,6 @@
 <?php
 
-class PhpDocParser extends utils implements service
+class PhpDocParser extends core_utils implements service
 {
 	private static $instence = null;
 

@@ -64,7 +64,10 @@ class add extends command
         }
     }
 
-    public function module()
+	/**
+	 * @throws Exception
+	 */
+	public function module()
     {
         $moduleName = $this->get_from_name('module_name') ? $this->get_from_name('module_name') : $this->argv[1];
         $autoloadCustom = $this->get_from_name('custom_autoload') ? $this->get_from_name('custom_autoload') : true;
@@ -138,10 +141,14 @@ class add extends command
         } else {
             if (substr($path, 0, strlen('https://github.com/')) === 'https://github.com/') {
                 mkdir("core/{$pathCore}");
+                $moduleCore['repository'] = [
+                	'type' => 'git',
+					'path' => $path
+				];
                 $this->get_manager('services')->conf()->add_module('core', $moduleName, $moduleCore);
 
                 exec("git clone {$path} custom/$pathCustom");
-                $this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
+				$this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
             }
         }
     }

@@ -8,7 +8,7 @@
  * @method http_error code_200()
  */
 
-class error_manager extends utils implements manager
+class error_manager extends core_utils implements manager
 {
 
     protected static $instence = null;
