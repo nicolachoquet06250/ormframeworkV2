@@ -1,6 +1,6 @@
 <?php
 
-namespace ormframework;
+namespace ormframework\commands;
 
 use ormframework\core\commands\command;
 use \Exception;
