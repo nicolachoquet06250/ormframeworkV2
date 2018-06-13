@@ -1,8 +1,10 @@
 <?php
 
+namespace ormframework\custom\annotations;
+
 //require_once '../../core/annotation/interfaces/annotation_interface.php';
 
-class route implements annotation_interface
+class route implements \ormframework\core\annotation\interfaces\annotation_interface
 {
     public $comments;
 
@@ -26,7 +28,7 @@ class route implements annotation_interface
 		}
 		else {
 			$i = 0;
-			foreach ($this->comments[__CLASS__][$model] as $alias => $route) {
+			foreach ($this->comments['\\'.__CLASS__][$model] as $alias => $route) {
 				if ($i === $id) {
 					return [$route => $alias];
 				}
@@ -38,16 +40,12 @@ class route implements annotation_interface
 
 	public function to_html(int $id, $model='') {
     	$routes = $this->get($id, $model);
-    	$cmp = 0;
 		foreach ($routes as $route => $alias) {
-			if($cmp === $id) {
-				return "<div class='col-12'>
-						   route => {$route}
-						   <br />
-						   equivalent => {$alias}
-						</div>";
-			}
-			$cmp++;
+			return "<div class='col-12'>
+					    route => {$route}
+						<br />
+						equivalent => {$alias}
+					</div>";
     	}
 		return '';
 	}

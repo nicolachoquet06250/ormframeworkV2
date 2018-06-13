@@ -1,6 +1,8 @@
 <?php
 
-class model_annotation implements annotation_interface {
+namespace ormframework\custom\annotations;
+
+class model_annotation implements \ormframework\core\annotation\interfaces\annotation_interface {
 
 	private $comments = [];
 	public function __construct(array $comments) {
@@ -9,7 +11,7 @@ class model_annotation implements annotation_interface {
 
 	public function get($id=0) {
 		$i=0;
-		foreach ($this->comments['method'] as $model => $comment) {
+		foreach ($this->comments['\ormframework\custom\annotations\method'] as $model => $comment) {
 			if($i === $id) {
 				return $model;
 			}

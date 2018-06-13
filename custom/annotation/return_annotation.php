@@ -1,6 +1,8 @@
 <?php
 
-class return_annotation implements annotation_interface {
+namespace ormframework\custom\annotations;
+
+class return_annotation implements \ormframework\core\annotation\interfaces\annotation_interface {
 
 	private $comments = [];
 	public function __construct(array $comments) {
@@ -19,7 +21,7 @@ class return_annotation implements annotation_interface {
 			}
 			return $returns;
 		}
-		return $this->comments[__CLASS__][$model][$id];
+		return $this->comments['\\'.__CLASS__][$model][$id];
 	}
 
 	public function to_html(int $id, $model='') {

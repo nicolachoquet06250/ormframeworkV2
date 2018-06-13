@@ -1,4 +1,9 @@
 <?php
+
+namespace ormframework\core\managers;
+
+use \Exception;
+use \ormframework\core\errors\http_error;
 /**
  * Class error_manager
  *
@@ -8,7 +13,7 @@
  * @method http_error code_200()
  */
 
-class error_manager extends core_utils implements manager
+class error_manager extends \ormframework\core\setup\utils implements \ormframework\core\setup\interfaces\manager
 {
 
     protected static $instence = null;
@@ -34,6 +39,7 @@ class error_manager extends core_utils implements manager
     public function __call($name, $arguments)
     {
         if(is_file('core/errors/'.$name.'.php')) {
+        	$name = '\\ormframework\\core\\errors\\'.$name;
             $service = new $name($arguments);
             if($service instanceof http_error) {
                 return $service;

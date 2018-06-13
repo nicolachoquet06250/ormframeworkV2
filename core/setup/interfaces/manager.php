@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework\core\setup\interfaces;
+
 interface manager {
 
 	public static function instence();

@@ -1,6 +1,8 @@
 <?php
 
-class method implements annotation_interface {
+namespace ormframework\custom\annotations;
+
+class method implements \ormframework\core\annotation\interfaces\annotation_interface {
 
 	private $comments = [];
 	public function __construct(array $comments) {
@@ -19,7 +21,7 @@ class method implements annotation_interface {
 			}
 			return $methods;
 		}
-		return $this->comments['method'][$model][$id];
+		return $this->comments['\ormframework\custom\annotations\method'][$model][$id];
 	}
 
 	public function to_html(int $id, $model='') {

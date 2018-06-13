@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 require_once 'conf.php';
 
 if(DEBUG)

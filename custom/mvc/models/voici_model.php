@@ -1,5 +1,11 @@
 <?php
 
+namespace ormframework\custom\mvc\models;
+
+use \ormframework\core\annotation\PhpDocParser;
+use \ormframework\custom\mvc\views\Html_view;
+use ormframework\core\mvc\Model;
+
 class voici_model extends Model {
 
 	/**

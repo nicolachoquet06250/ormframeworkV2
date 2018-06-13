@@ -14,6 +14,10 @@
     {
       "method": "method",
       "args": 2
+    },
+    {
+      "method": "module",
+      "args": 8
     }
   ],
   "rm": [
@@ -24,6 +28,42 @@
     {
       "method": "method",
       "args": 2
+    },
+    {
+      "method": "module",
+      "args": 1
+    }
+  ],
+  "orm": [
+    {
+      "method": "start",
+      "args": 0
+    },
+    {
+      "method": "add_method_to_model",
+      "args": 5
+    },
+    {
+      "method": "new_whole",
+      "args": 1
+    },
+    {
+      "method": "rm_whole",
+      "args": 1
+    }
+  ],
+  "sql": [
+    {
+      "method": "new_alias",
+      "args": 8
+    },
+    {
+      "method": "rm_alias",
+      "args": 2
+    },
+    {
+      "method": "update_alias",
+      "args": 8
     }
   ]
 }

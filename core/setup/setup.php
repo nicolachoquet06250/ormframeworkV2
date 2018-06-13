@@ -1,6 +1,10 @@
 <?php
 
-class setup extends core_utils
+namespace ormframework\core\setup;
+
+use \Exception;
+
+class setup extends utils
 {
     /**
      * @var bool $is_assoc
@@ -76,8 +80,10 @@ class setup extends core_utils
      */
     private function start(array $argv) {
         if(file_exists("custom/mvc/controllers/{$argv['controller']}_controller.php")) {
+        	$namespace = '\\ormframework\\custom\\mvc\\controllers\\';
             $controllerName = $argv['controller'].'_controller';
-            echo (new $controllerName($argv['method'], $argv['argv'], $this->argv_is_assoc()))
+            $controller = $namespace.$controllerName;
+            echo (new $controller($argv['method'], $argv['argv'], $this->argv_is_assoc()))
                 ->response()->display();
         }
         else {
@@ -85,7 +91,7 @@ class setup extends core_utils
                 ${404} = $this->get_manager('error')->error_404();
                 ${404}->message = "Controller `{$argv['controller']}` not found";
                 ${404}->header();
-                echo (new Json_view(${404}))->display();
+                echo (new \ormframework\custom\mvc\views\Json_view(${404}))->display();
             }
             catch (Exception $e) {
                 exit($e->getMessage());

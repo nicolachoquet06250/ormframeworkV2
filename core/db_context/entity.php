@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework\core\db_context;
+
 class entity
 {
     public function __call($name, $arguments=null)

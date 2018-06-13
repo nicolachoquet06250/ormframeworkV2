@@ -1,6 +1,10 @@
 <?php
 
-class command extends core_utils implements commande_interface
+namespace ormframework\core\commands;
+
+use \Exception;
+
+class command extends \ormframework\core\setup\utils implements \ormframework\core\commands\interfaces\commande_interface
 {
 
     private static $instence;
@@ -43,11 +47,15 @@ class command extends core_utils implements commande_interface
         }
 
         require_once $class_path;
-        if (class_exists($class)) {
+        $class_with_namespace = '\\ormframework\\'
+								.str_replace('/', '\\',
+											 str_replace(basename($class_path), '', $class_path)
+								).$class;
+        if (class_exists($class_with_namespace)) {
             /**
              * @var command $command
              */
-            $command = new $class($args);
+            $command = new $class_with_namespace($args);
             if($command instanceof command) {
                 if(isset($args['method'])) {
                     if(in_array($args['method'], get_class_methods($command))) {
@@ -68,7 +76,7 @@ class command extends core_utils implements commande_interface
                     $argv = [];
                 }
                 $this->argv = $argv;
-                (new $class($argv))->$method($argv);
+                (new $class_with_namespace($argv))->$method($argv);
             }
             else {
                 throw new Exception("Class {$class} is not a command");

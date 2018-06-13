@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 
 require_once 'http_error.php';
 require_once 'error_500.php';

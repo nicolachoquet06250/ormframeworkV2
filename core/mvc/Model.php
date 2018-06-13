@@ -1,6 +1,8 @@
 <?php
 
-class Model extends core_utils implements Model_interface
+namespace ormframework\core\mvc;
+
+class Model extends \ormframework\core\setup\utils implements \ormframework\core\mvc\interfaces\Model_interface
 {
 
     private $is_assoc;

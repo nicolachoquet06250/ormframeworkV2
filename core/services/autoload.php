@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 // Load interfaces
 require_once 'interfaces/service.php';
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework\core\setup;
+
 class main
 {
     private static $instence;

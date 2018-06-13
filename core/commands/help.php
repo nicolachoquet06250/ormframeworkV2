@@ -1,4 +1,5 @@
 <?php
+namespace ormframework\core\commands;
 
 class help extends command
 {
@@ -25,7 +26,7 @@ class help extends command
                         if ($i === 0) {
                             $string .= ' -p';
                         }
-                        $string .= ' < arg ' . $i . ' >';
+                        $string .= ' < arg ' . ($i+1) . ' >';
                     }
                     echo $string . "\n";
                 }

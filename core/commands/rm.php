@@ -1,4 +1,7 @@
 <?php
+namespace ormframework\core\commands;
+
+use \Exception;
 
 class rm extends command
 {

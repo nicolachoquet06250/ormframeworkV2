@@ -1,4 +1,5 @@
 <?php
+namespace ormframework\core\commands;
 
 class hello_world extends command
 {

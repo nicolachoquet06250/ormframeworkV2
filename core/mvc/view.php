@@ -1,6 +1,8 @@
 <?php
 
-class view implements view_interface
+namespace ormframework\core\mvc;
+
+class view extends \ormframework\core\setup\utils implements \ormframework\core\mvc\interfaces\view_interface
 {
     protected $data;
 
@@ -15,7 +17,7 @@ class view implements view_interface
 
     public function to_object() {
         if(!gettype($this->data) === 'object') {
-            $object = new stdClass();
+            $object = new \stdClass();
             $object->attr = $this->data;
         }
         else {
