@@ -31,7 +31,7 @@ $path_prefix = '';
 
 define('DEBUG', json_decode(file_get_contents($path_prefix.'core/ormf-modules-conf.json'))->debug);
 
-//if(DEBUG)
+if(DEBUG)
     ini_set('display_errors', 'on');
 
 require_once 'autoload.php';
