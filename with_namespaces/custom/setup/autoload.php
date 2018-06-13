@@ -1,4 +1,7 @@
 <?php
+
+namespace ormframework;
+
 require_once 'utils.php';
 
 if($date) {

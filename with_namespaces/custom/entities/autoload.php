@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 $dir = opendir('./custom/entities');
 while (($file = readdir($dir)) !== false) {
     if($file !== '.' && $file !== '..') {

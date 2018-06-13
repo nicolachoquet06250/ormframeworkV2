@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 require_once 'interfaces/commande_interface.php';
 require_once 'extended/command.php';
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 require_once 'interfaces/annotation_interface.php';
 require_once 'PhpDocParser.php';
 

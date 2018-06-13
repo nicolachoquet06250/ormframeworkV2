@@ -2,6 +2,8 @@
 
 namespace ormframework\custom\mvc\controllers;
 
-class HelloWorld_controller extends \ormframework\core\mvc\Controller {
+use ormframework\core\mvc\Controller;
+
+class HelloWorld_controller extends Controller {
 
 }

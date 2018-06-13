@@ -1,4 +1,7 @@
 <?php
+
+namespace ormframework;
+
 	$dir = opendir('./custom/mvc/controllers');
 	while (($file = readdir($dir)) !== false) {
 	    if ($file !== '.' && $file !== '..') {

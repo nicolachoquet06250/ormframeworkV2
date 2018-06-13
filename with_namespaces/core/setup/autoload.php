@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 require_once 'utils.php';
 require_once 'interfaces/manager.php';
 require_once 'managers/error_manager.php';

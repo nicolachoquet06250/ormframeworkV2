@@ -1,5 +1,7 @@
 <?php
 
+namespace ormframework;
+
 require_once 'interfaces/Controller_interface.php';
 require_once 'interfaces/Model_interface.php';
 require_once 'interfaces/view_interface.php';
