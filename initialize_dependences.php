@@ -19,7 +19,7 @@ class initialize_dependences extends utils
             while (($file = readdir($dir)) !== false) {
                 if ($file !== '.' && $file !== '..'
                     && substr($file, 0, 1) !== '.'
-                    && strtolower($file) !== 'demo'
+                    && !strstr(strtolower($file), 'demo')
                     && strtolower($file) !== 'readme.md'
                     && strtolower($file) !== 'readme.txt') {
                     if (is_dir("{$directory}/{$file}")) {

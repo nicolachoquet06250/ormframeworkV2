@@ -104,6 +104,26 @@ class add extends command
 			}
 		}
 
+        function parcour_dir($directory, $module_path, &$body)
+        {
+
+            $dir = opendir($directory);
+            while (($file = readdir($dir)) !== false) {
+                if ($file !== '.' && $file !== '..'
+                    && substr($file, 0, 1) !== '.'
+                    && !strstr(strtolower($file), 'demo')
+                    && strtolower($file) !== 'readme.md'
+                    && strtolower($file) !== 'readme.txt') {
+                    if (is_dir("{$directory}/{$file}")) {
+                        parcour_dir("{$directory}/{$file}", $module_path, $body);
+                    } else {
+                        $path = str_replace($module_path.'/', '', "{$directory}/{$file}");
+                        $body .= "require_once '{$path}';\n";
+                    }
+                }
+            }
+        }
+
         $moduleName = $this->get_from_name('module_name') ? $this->get_from_name('module_name') : $this->argv[1];
         $autoloadCustom = $this->get_from_name('custom_autoload') ? $this->get_from_name('custom_autoload') : true;
         $autoloadCustom = ($autoloadCustom === 'false') ? false : true;
@@ -136,12 +156,15 @@ class add extends command
             copy_directory("$path", "custom/{$pathCustom}");
             if ($autoloadCustom) {
                 if (!is_file("custom/{$pathCustom}/autoload.php")) {
-                    file_put_contents("custom/{$pathCustom}/autoload.php", "<?php
-        require_once 'Autoload.php';
-        Auto::load();
-                    
-        if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);");
+                    $start = "<?php\n
+            namespace ormframework;\n";
+                    $end = "if(DEBUG)
+            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+                    $body = '';
+
+                    parcour_dir("custom/{$pathCustom}", "custom/{$pathCustom}", $body);
+
+                    file_put_contents("custom/{$pathCustom}/autoload.php", $start . $body . $end);
                 }
             }
             $this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
@@ -151,6 +174,7 @@ class add extends command
             mkdir("core/{$pathCore}");
             if ($autoloadCore) {
                 file_put_contents("core/{$pathCore}/autoload.php", "<?php
+            namespace ormframework;\n
                     
         if(DEBUG)
             log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
@@ -162,6 +186,7 @@ class add extends command
 				mkdir("core/{$pathCore}");
 				if ($autoloadCore) {
 					file_put_contents("core/{$pathCore}/autoload.php", "<?php
+            namespace ormframework;\n
                     
         if(DEBUG)
             log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
@@ -178,12 +203,15 @@ class add extends command
 				}
 				if ($autoloadCustom) {
 					if (!is_file("custom/{$pathCustom}/autoload.php")) {
-						file_put_contents("custom/{$pathCustom}/autoload.php", "<?php
-        require_once 'Autoload.php';
-        Auto::load();
-                    
-        if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);");
+                        $start = "<?php\n
+            namespace ormframework;\n";
+                        $end = "if(DEBUG)
+            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+                        $body = '';
+
+                        parcour_dir("custom/{$pathCustom}", "custom/$pathCustom", $body);
+
+                        file_put_contents("custom/{$pathCustom}/autoload.php", $start . $body . $end);
 					}
 				}
 				$this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
