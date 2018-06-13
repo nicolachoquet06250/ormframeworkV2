@@ -61,6 +61,16 @@
       "disabled": true,
       "autoload": true,
       "service": "database"
+    },
+    "sql_links": {
+      "version": "0.0.1",
+      "location": "sql",
+      "enable": true,
+      "autoload": false,
+      "repository": {
+        "type": "git",
+        "path": "https:\/\/github.com\/nicolachoquet06250\/SqlLinks.git"
+      }
     }
   }
 }

@@ -72,6 +72,38 @@ class add extends command
 	 */
 	public function module()
     {
+
+		function rmdir_recursif($path) {
+			$dir = opendir($path);
+			while (($file = readdir($dir)) !== false) {
+				if($file !== '.' && $file !== '..') {
+					if(is_dir($path.'/'.$file)) {
+						rmdir_recursif($path.'/'.$file);
+						rmdir($path.'/'.$file);
+					}
+					else {
+						unlink($path.'/'.$file);
+					}
+				}
+			}
+		}
+
+		function copy_directory($path_source, $path_dest)
+		{
+			$dir = opendir($path_source);
+			mkdir("{$path_dest}");
+
+			while (($file = readdir($dir)) !== false) {
+				if ($file !== '.' && $file !== '..' && $file !== '.idea') {
+					if (is_dir("$path_source/{$file}")) {
+						copy_directory("$path_source/{$file}", "$path_dest/{$file}");
+					} else {
+						copy("$path_source/{$file}", "{$path_dest}/{$file}");
+					}
+				}
+			}
+		}
+
         $moduleName = $this->get_from_name('module_name') ? $this->get_from_name('module_name') : $this->argv[1];
         $autoloadCustom = $this->get_from_name('custom_autoload') ? $this->get_from_name('custom_autoload') : true;
         $autoloadCustom = ($autoloadCustom === 'false') ? false : true;
@@ -99,22 +131,6 @@ class add extends command
         }
 
         if (is_dir($path = ($this->get_from_name('path') ? $this->get_from_name('path') : $this->argv[0]))) {
-
-            function copy_directory($path_source, $path_dest)
-            {
-                $dir = opendir($path_source);
-                mkdir("{$path_dest}");
-
-                while (($file = readdir($dir)) !== false) {
-                    if ($file !== '.' && $file !== '..' && $file !== '.idea') {
-                        if (is_dir("$path_source/{$file}")) {
-                            copy_directory("$path_source/{$file}", "$path_dest/{$file}");
-                        } else {
-                            copy("$path_source/{$file}", "{$path_dest}/{$file}");
-                        }
-                    }
-                }
-            }
             // partie custom
             // copie de la lib dans un module
             copy_directory("$path", "custom/{$pathCustom}");
@@ -143,14 +159,33 @@ class add extends command
 
         } else {
             if (substr($path, 0, strlen('https://github.com/')) === 'https://github.com/') {
-                mkdir("core/{$pathCore}");
-                $moduleCore['repository'] = [
-                	'type' => 'git',
+				mkdir("core/{$pathCore}");
+				if ($autoloadCore) {
+					file_put_contents("core/{$pathCore}/autoload.php", "<?php
+                    
+        if(DEBUG)
+            log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
+				}
+				$moduleCore['repository'] = [
+					'type' => 'git',
 					'path' => $path
 				];
-                $this->get_manager('services')->conf()->add_module('core', $moduleName, $moduleCore);
-
-                exec("git clone {$path} custom/$pathCustom");
+				$this->get_manager('services')->conf()->add_module('core', $moduleName, $moduleCore);
+				exec("git clone {$path} custom/$pathCustom");
+				if(is_dir("custom/{$pathCustom}/.idea")) {
+					rmdir_recursif("custom/{$pathCustom}/.idea");
+					rmdir("custom/{$pathCustom}/.idea");
+				}
+				if ($autoloadCustom) {
+					if (!is_file("custom/{$pathCustom}/autoload.php")) {
+						file_put_contents("custom/{$pathCustom}/autoload.php", "<?php
+        require_once 'Autoload.php';
+        Auto::load();
+                    
+        if(DEBUG)
+            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);");
+					}
+				}
 				$this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
             }
         }
