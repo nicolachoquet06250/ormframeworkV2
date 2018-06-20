@@ -26,7 +26,12 @@ class help extends command
                         if ($i === 0) {
                             $string .= ' -p';
                         }
-                        $string .= ' < arg ' . ($i+1) . ' >';
+                        if(isset($detail['keys'])) {
+                            foreach ($detail['keys'] as $key) {
+                                $string .= " {$key}=";
+                            }
+                        }
+                        $string .= '< arg ' . ($i+1) . ' >';
                     }
                     echo $string . "\n";
                 }

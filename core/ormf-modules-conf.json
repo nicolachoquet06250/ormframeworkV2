@@ -54,14 +54,6 @@
       "autoload": true,
       "service": "command"
     },
-    "sql": {
-      "version": "0.0.1",
-      "location": "database",
-      "enable": true,
-      "disabled": true,
-      "autoload": true,
-      "service": "database"
-    },
     "api": {
       "version": "0.0.1",
       "location": "api",

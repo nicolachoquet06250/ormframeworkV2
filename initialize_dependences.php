@@ -14,10 +14,33 @@ class initialize_dependences extends utils
 
         function parcour_dir($directory, $module_path, &$body)
         {
+            $dir = opendir($directory);
+
+            while (($file = readdir($dir)) !== false) {
+                if ($file === 'interfaces') {
+                    if (is_dir("{$directory}/{$file}")) {
+                        parcour_dir("{$directory}/{$file}", $module_path, $body);
+                    }
+                }
+            }
 
             $dir = opendir($directory);
+
+            while (($file = readdir($dir)) !== false) {
+                if ($file === 'extended') {
+                    if (is_dir("{$directory}/{$file}")) {
+                        parcour_dir("{$directory}/{$file}", $module_path, $body);
+                    }
+                }
+            }
+
+            $dir = opendir($directory);
+
             while (($file = readdir($dir)) !== false) {
                 if ($file !== '.' && $file !== '..'
+                    && $file !== 'interfaces'
+                    && $file !== 'extended'
+                    && strtolower($file) !== 'autoload.php'
                     && substr($file, 0, 1) !== '.'
                     && !strstr(strtolower($file), 'demo')
                     && strtolower($file) !== 'readme.md'
@@ -26,7 +49,7 @@ class initialize_dependences extends utils
                         parcour_dir("{$directory}/{$file}", $module_path, $body);
                     } else {
                         $path = str_replace($module_path.'/', '', "{$directory}/{$file}");
-                        $body .= "require_once '{$path}';\n";
+                        $body .= "\trequire_once '{$path}';\n";
                     }
                 }
             }
@@ -50,16 +73,10 @@ class initialize_dependences extends utils
                 }
 
                 if($module->autoload) {
-                    file_put_contents("{$module->location['core']}/autoload.php", "<?php
-        namespace ormframework;\n
-                    
-        if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
-
-                    $start = "<?php\n
-            namespace ormframework;\n";
-                    $end = "if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+                    $start = "<?php\n".
+                    "\tnamespace ormframework;\n";
+                    $end = "\tif(DEBUG)\n".
+                    "\t\tlog_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
                     $body = '';
 
                     parcour_dir($module->location['custom'], $module->location['custom'], $body);
@@ -68,11 +85,10 @@ class initialize_dependences extends utils
                 }
                 else {
                     if ($module->autoload['core']) {
-                        file_put_contents("{$module->location['core']}/autoload.php", "<?php
-        namespace ormframework;
-                    
-        if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
+                        file_put_contents("{$module->location['core']}/autoload.php", "<?php\n".
+                        "\tnamespace ormframework;\n\n".
+                        "\tif(DEBUG)\n".
+                        "\n\nlog_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
                     }
 
                     if ($module->autoload['custom']) {

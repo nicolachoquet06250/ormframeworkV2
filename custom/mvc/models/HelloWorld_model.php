@@ -64,17 +64,4 @@ class HelloWorld_model extends Model {
 
         return new Json_view($entity);
 	}
-
-	/**
-	 * @model HelloWorld
-	 * @description toto
-	 * @method toto
-	 * @param mixed $args
-	 * @return Json_view
-	 * @route test/toto/voila/je/suis/la
-	 **/
-	public function toto($args) {
-		// TODO : mettez votre code ici.
-		return new Json_view([]);
-	}
 }

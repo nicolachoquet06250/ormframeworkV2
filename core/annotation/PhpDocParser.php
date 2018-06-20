@@ -147,7 +147,7 @@ class PhpDocParser extends utils
 
 	/**
 	 * @param null|string $file_or_dir
-	 * @param bool $directory
+	 * @param bool|string $directory
 	 * @return PhpDocParser
 	 */
     public static function instence($file_or_dir = null, $directory = false) {

@@ -3,35 +3,60 @@
   "hello_world": [
     {
       "method": "say",
-      "args": 2
+      "args": 0
     }
   ],
   "add": [
     {
       "method": "command",
-      "args": 1
+      "args": 1,
+      "keys": [
+        "script_name"
+      ]
     },
     {
       "method": "method",
-      "args": 2
+      "args": 2,
+      "keys": [
+        "name",
+        "to_command"
+      ]
     },
     {
       "method": "module",
-      "args": 8
+      "args": 8,
+      "keys": [
+        "module_name",
+        "custom_autoload",
+        "core_autoload",
+        "custom_path",
+        "core_path",
+        "version"
+      ]
     }
   ],
   "rm": [
     {
       "method": "command",
-      "args": 1
+      "args": 1,
+      "keys": [
+        "script_name"
+      ]
     },
     {
       "method": "method",
-      "args": 2
+      "args": 2,
+      "keys": [
+        "name",
+        "from_command"
+      ]
     },
     {
       "method": "module",
-      "args": 1
+      "args": 1,
+      "keys": [
+        "module"
+      ]
     }
   ],
   "orm": [
@@ -41,29 +66,66 @@
     },
     {
       "method": "add_method_to_model",
-      "args": 5
+      "args": 5,
+      "keys": [
+        "model",
+        "method",
+        "return",
+        "description",
+        "route"
+      ]
     },
     {
       "method": "new_whole",
-      "args": 1
+      "args": 1,
+      "keys": [
+        "whole"
+      ]
     },
     {
       "method": "rm_whole",
-      "args": 1
+      "args": 1,
+      "keys": [
+        "whole"
+      ]
     }
   ],
   "sql": [
     {
       "method": "new_alias",
-      "args": 8
+      "args": 8,
+      "keys": [
+        "bdd_type",
+        "database",
+        "alias",
+        "path_to_database",
+        "host",
+        "user",
+        "password",
+        "port"
+      ]
     },
     {
       "method": "rm_alias",
-      "args": 2
+      "args": 2,
+      "keys": [
+        "alias",
+        "bdd_type"
+      ]
     },
     {
       "method": "update_alias",
-      "args": 8
+      "args": 8,
+      "keys": [
+        "bdd_type",
+        "database",
+        "alias",
+        "path_to_database",
+        "host",
+        "user",
+        "password",
+        "port"
+      ]
     }
   ]
 }

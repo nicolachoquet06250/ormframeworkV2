@@ -31,10 +31,6 @@
       "location": false,
       "autoload": false
     },
-    "sql": {
-      "location": false,
-      "autoload": false
-    },
     "api": {
       "version": "0.0.1",
       "autoload": true,
