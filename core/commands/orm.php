@@ -9,10 +9,6 @@ class orm extends command
         $this->argv = $args;
     }
 
-	public function start() {
-
-    }
-
     private function genere_model() {
         $modelName = $this->get_from_name('whole');
 
@@ -70,6 +66,10 @@ class orm extends command
 		unlink("custom/mvc/controllers/{$controllerName}_controller.php");
 	}
 
+	/**
+	 * @return bool
+	 * @throws \Exception
+	 */
 	public function add_method_to_model() {
 		$model = $this->get_from_name('model');
 		$method = $this->get_from_name('method');
@@ -131,5 +131,11 @@ class orm extends command
 		$this->rm_controller();
 		$this->rm_model();
 		$this->rm_entity();
+	}
+
+	public function start() {
+		$alias = $this->get_from_name('alias');
+		$bdd_type = $this->get_from_name('bdd_type');
+
 	}
 }
