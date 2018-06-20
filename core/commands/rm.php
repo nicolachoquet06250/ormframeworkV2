@@ -21,11 +21,7 @@ class rm extends command
         if (is_file("custom/commands/{$commandName}.php")) {
             unlink("custom/commands/{$commandName}.php");
 
-            $commands_conf = json_decode(file_get_contents('core/commands/enable_commands.json'), true);
-            if (isset($commands_conf[$commandName])) {
-                unset($commands_conf[$commandName]);
-                file_put_contents('core/commands/enable_commands.json', json_encode($commands_conf));
-            }
+            $this->get_manager('command')->delete_command($commandName);
         } else {
             throw new Exception("La commande {$commandName} n'existe pas");
         }
@@ -57,14 +53,7 @@ class rm extends command
 
             file_put_contents("custom/commands/{$from_command}.php", $command_class_content);
 
-            $commands_conf = json_decode(file_get_contents('core/commands/enable_commands.json'), true);
-            foreach ($commands_conf[$from_command] as $id => $item) {
-                if ($item['method'] === $name) {
-                    unset($commands_conf[$from_command][$id]);
-                    break;
-                }
-            }
-            file_put_contents('core/commands/enable_commands.json', json_encode($commands_conf));
+            $this->get_manager('command')->delete_method($from_command, $name);
         } else {
             throw new Exception("La methode {$name} n'existe pas dans la commande {$from_command}");
         }

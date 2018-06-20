@@ -25,7 +25,7 @@ class utils {
 
 	/**
 	 * @param null $type
-	 * @return \ormframework\core\managers\services_manager|\ormframework\core\managers\error_manager|\ormframework\core\setup\global_manager
+	 * @return \ormframework\core\managers\services_manager|\ormframework\core\managers\error_manager|\ormframework\core\setup\global_manager|\ormframework\core\managers\command_manager
 	 */
     public function get_manager($type = null)
     {

@@ -21,17 +21,17 @@ class help extends command
             }
             if(!empty($details)) {
                 foreach ($details as $detail) {
-                    $string = 'php ormframework.php '.$command.' do '.$detail['method'];
+                    $string = 'php ormframework.php '.$command.' do '.str_replace('_', ' ', $detail['method']);
                     for ($i = 0, $max = $detail['args']; $i < $max; $i++) {
                         if ($i === 0) {
                             $string .= ' -p';
                         }
-                        if(isset($detail['keys'])) {
-                            foreach ($detail['keys'] as $key) {
-                                $string .= " {$key}=";
-                            }
+                    }
+                    if(isset($detail['keys'])) {
+                        foreach ($detail['keys'] as $id => $key) {
+                            $string .= " {$key}=";
+                            $string .= '<arg'.$id.'>';
                         }
-                        $string .= '< arg ' . ($i+1) . ' >';
                     }
                     echo $string . "\n";
                 }

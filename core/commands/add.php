@@ -26,9 +26,7 @@ class add extends command
             var_dump('Hello World');
         }
     }");
-        $commands_conf = json_decode(file_get_contents('core/commands/enable_commands.json'), true);
-        $commands_conf[$commandName] = [];
-        file_put_contents('core/commands/enable_commands.json', json_encode($commands_conf));
+        $this->get_manager('command')->add_command($commandName);
     }
 
     /**
@@ -53,12 +51,7 @@ class add extends command
         }";
                 file_put_contents("custom/commands/{$to_command}.php", $command_class_content);
 
-                $commands_conf = json_decode(file_get_contents('core/commands/enable_commands.json'), true);
-                $commands_conf[$to_command][] = [];
-                $commands_conf[$to_command][count((array)$commands_conf[$to_command]) - 1]['method'] = $name;
-                $commands_conf[$to_command][count((array)$commands_conf[$to_command]) - 1]['args'] = 2;
-
-                file_put_contents('core/commands/enable_commands.json', json_encode($commands_conf));
+                $this->get_manager('command')->add_method($to_command, $name, 2, ['var1', 'var2']);
             } else {
                 throw new Exception("La methode {$name} existe déja dans la commande {$to_command}");
             }
@@ -229,6 +222,18 @@ class add extends command
 					throw new Exception("Ce module existe déja.\nLancez la commande : php ormframework.php initialize do dependencies");
 				}
             }
+        }
+    }
+
+    public function test_commands_manager() {
+	    $command = $this->get_from_name('command');
+	    $method = $this->get_from_name('method');
+        $cm = $this->get_manager('command');
+        if($method) {
+            $cm->delete_method($command, $method);
+        }
+        else {
+            $cm->delete_command($command);
         }
     }
 }

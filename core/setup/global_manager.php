@@ -3,6 +3,7 @@
 namespace ormframework\core\setup;
 
 use \Exception;
+use ormframework\core\managers\command_manager;
 use ormframework\core\managers\error_manager;
 use ormframework\core\managers\services_manager;
 use \ormframework\core\setup\interfaces\manager;
@@ -12,6 +13,7 @@ use \ormframework\core\setup\interfaces\manager;
  *
  * @method error_manager error_manager()
  * @method services_manager service_manager()
+ * @method command_manager commande_manager()
  */
 class global_manager implements manager
 {
