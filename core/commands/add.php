@@ -196,25 +196,38 @@ class add extends command
 					'path' => $path
 				];
 				$this->get_manager('services')->conf()->add_module('core', $moduleName, $moduleCore);
-				exec("git clone {$path} custom/$pathCustom");
-				if(is_dir("custom/{$pathCustom}/.idea")) {
-					rmdir_recursif("custom/{$pathCustom}/.idea");
-					rmdir("custom/{$pathCustom}/.idea");
-				}
-				if ($autoloadCustom) {
-					if (!is_file("custom/{$pathCustom}/autoload.php")) {
-                        $start = "<?php\n
-            namespace ormframework;\n";
-                        $end = "if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
-                        $body = '';
 
-                        parcour_dir("custom/{$pathCustom}", "custom/$pathCustom", $body);
-
-                        file_put_contents("custom/{$pathCustom}/autoload.php", $start . $body . $end);
+				if(!is_dir("custom/{$pathCustom}")) {
+					exec("git clone {$path} custom/$pathCustom");
+					if (is_dir("custom/{$pathCustom}/.idea")) {
+						rmdir_recursif("custom/{$pathCustom}/.idea");
+						rmdir("custom/{$pathCustom}/.idea");
 					}
+					$ligne      = "\n    <mapping directory=\"\$PROJECT_DIR$/custom/{$pathCustom}\" vcs=\"Git\" />";
+					$to_replace = "\n  </component>\n</project>";
+					$vcs        = file_get_contents('./.idea/vcs.xml');
+					$vcs        = str_replace($to_replace, $ligne, $vcs).$to_replace;
+
+					file_put_contents('./.idea/vcs.xml', $vcs);
+
+					if ($autoloadCustom) {
+						if (!is_file("custom/{$pathCustom}/autoload.php")) {
+							$start = "<?php\n
+				namespace ormframework;\n";
+							$end   = "if(DEBUG)
+				log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+							$body  = '';
+
+							parcour_dir("custom/{$pathCustom}", "custom/$pathCustom", $body);
+
+							file_put_contents("custom/{$pathCustom}/autoload.php", $start.$body.$end);
+						}
+					}
+					$this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
 				}
-				$this->get_manager('services')->conf()->add_module('custom', $moduleName, $moduleCustom);
+				else {
+					throw new Exception("Ce module existe déja.\nLancez la commande : php ormframework.php initialize do dependencies");
+				}
             }
         }
     }

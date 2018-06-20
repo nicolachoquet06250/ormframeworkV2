@@ -41,7 +41,14 @@ class initialize_dependences extends utils
                 // Pour le custom
                 if(!is_dir($module->location['custom'])) {
                     exec("{$module->repository->type} clone {$module->repository->path} {$module->location['custom']}");
+
+					$ligne = "\n    <mapping directory=\"\$PROJECT_DIR$/{$module->location['custom']}\" vcs=\"Git\" />";
+					$to_replace = "\n  </component>\n</project>";
+					$vcs = file_get_contents('./.idea/vcs.xml');
+					$vcs = str_replace($to_replace, $ligne, $vcs).$to_replace;
+					file_put_contents('./.idea/vcs.xml', $vcs);
                 }
+
                 if($module->autoload) {
                     file_put_contents("{$module->location['core']}/autoload.php", "<?php
         namespace ormframework;\n

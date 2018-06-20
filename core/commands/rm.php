@@ -94,6 +94,11 @@ class rm extends command
         rmdir_recursif("{$conf->modules->$module->location['custom']}");
         rmdir("{$conf->modules->$module->location['custom']}");
 
+		$ligne      = "\n    <mapping directory=\"\$PROJECT_DIR$/{$conf->modules->$module->location['custom']}\" vcs=\"Git\" />";
+		$vcs        = file_get_contents('./.idea/vcs.xml');
+		$vcs        = str_replace($ligne, '', $vcs);
+		file_put_contents('./.idea/vcs.xml', $vcs);
+
         $this->get_manager('services')->conf()->remove_module($module);
     }
 }
