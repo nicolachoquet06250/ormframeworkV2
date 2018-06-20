@@ -1,6 +1,10 @@
 <?php
 namespace ormframework\core\commands;
 
+use sql_links\Entities\connexions\JsonConnexion;
+
+require_once 'custom/sql_links/autoload.php';
+
 class orm extends command
 {
 
@@ -136,6 +140,10 @@ class orm extends command
 	public function start() {
 		$alias = $this->get_from_name('alias');
 		$bdd_type = $this->get_from_name('bdd_type');
-
+		if($conf = $this->get_manager('services')->conf()->get_sql_conf($bdd_type)) {
+			$connexion = $conf[$alias];
+			$cnx = new JsonConnexion(['database' => $connexion->path_to_database.'/'.$connexion->database]);
+			var_dump($cnx);
+		}
 	}
 }
