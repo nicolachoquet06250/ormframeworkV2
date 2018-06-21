@@ -1,9 +1,11 @@
 <?php
 namespace ormframework\core\commands;
 
-use sql_links\Entities\connexions\JsonConnexion;
+use \Exception;
+use sql_links\factories\Request;
+use sql_links\factories\RequestConnexion;
+use sql_links\requests\Json;
 
-require_once 'custom/sql_links/autoload.php';
 
 class orm extends command
 {
@@ -137,13 +139,44 @@ class orm extends command
 		$this->rm_entity();
 	}
 
+    /**
+     * @throws Exception
+     */
 	public function start() {
+        require_once 'custom/sql_links/autoload.php';
 		$alias = $this->get_from_name('alias');
 		$bdd_type = $this->get_from_name('bdd_type');
 		if($conf = $this->get_manager('services')->conf()->get_sql_conf($bdd_type)) {
 			$connexion = $conf[$alias];
-			$cnx = new JsonConnexion(['database' => $connexion->path_to_database.'/'.$connexion->database]);
-			var_dump($cnx);
+			$cnx = new RequestConnexion(
+			    [
+			        'database' => $connexion->path_to_database.'/'.$connexion->database
+                ]
+            );
+			$request = Request::getIRequest($cnx, 'json');
+            $request->create(Json::TABLE, 'user')
+                    ->set([
+                        'id' => [
+                            'type' 		=> 'INT',
+                            'key' 		=> 'primary',
+                            'increment' => 'auto',
+                        ],
+                        'nom' => [
+                            'type'		=> 'TEXT',
+                        ],
+                        'prenom' => [
+                            'type' 		=> 'TEXT',
+                        ],
+                        'age' => [
+                            'type' 		=> 'INT',
+                        ],
+                        'ecole' => [
+                            'type'		=> 'TEXT',
+                            'default'	=> 'CampusID',
+                        ],
+                    ])->query();
+			$tables = $request->show()->tables()->query();
+			var_dump($tables);
 		}
 	}
 }
