@@ -113,6 +113,14 @@ class conf extends utils implements service
 		];
     }
 
+    public function update_conf($name, $conf, $type = 'core') {
+        $old_conf = $this->get_modules_conf($type);
+        $old_conf->$name = $conf;
+        $new_conf = $old_conf;
+
+        file_put_contents('core/ormf-modules-conf.json', json_encode($new_conf));
+    }
+
 	/**
 	 * renvoie la conf sql avec ou sans filtre par type de base
 	 *
