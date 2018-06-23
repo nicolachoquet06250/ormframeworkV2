@@ -1,6 +1,8 @@
 <?php
 namespace ormframework\core\commands;
 
+use ormframework\core\setup\utils;
+
 class help extends command
 {
     private $commands = [];
@@ -17,7 +19,7 @@ class help extends command
                 $string = 'php ormframework.php'
                     ."\n".'php ormframework.php -h'
                     ."\n".'php ormframework.php --help';
-                echo $string . "\n";
+                echo $this->color_cli_text($string)."\n";
             }
             if(!empty($details)) {
                 foreach ($details as $detail) {
@@ -30,10 +32,11 @@ class help extends command
                     if(isset($detail['keys'])) {
                         foreach ($detail['keys'] as $id => $key) {
                             $string .= " {$key}=";
-                            $string .= '<arg'.$id.'>';
+                            $string .= '<value>';
                         }
                     }
-                    echo $string . "\n";
+                    $color = isset($detail['important']) ? self::RED_TEXT : self::WHITE_TEXT;
+                    echo $this->color_cli_text($string, $color)."\n";
                 }
             }
         }

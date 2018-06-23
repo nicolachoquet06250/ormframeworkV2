@@ -2,6 +2,7 @@
 
 namespace ormframework\core\commands;
 
+use Exception;
 
 class count extends command
 {
@@ -24,9 +25,11 @@ class count extends command
         }
     }
 
-    public function nbr_php_lignes_into_project() {
+    public function nbr_php_lines_into_project() {
+        $part = $this->get_from_name('part') ? './'.$this->get_from_name('part').'/' : './';
+        $message = $this->get_from_name('part') ? "La partie {$this->get_from_name('part')} de votre projet compte {nbr} lignes" : "Votre projet compte {nbr} au total";
         $nbr = 0;
-        $this->parcour_dir($nbr);
-        var_dump($nbr);
+        $this->parcour_dir($nbr, $part);
+        throw new Exception(str_replace('{nbr}', $nbr, $message));
     }
 }

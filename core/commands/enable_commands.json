@@ -6,6 +6,13 @@
       "args": 0
     }
   ],
+  "initialize": [
+    {
+      "method": "dependencies",
+      "args": 0,
+      "important": true
+    }
+  ],
   "add": [
     {
       "method": "command",
@@ -62,7 +69,11 @@
   "orm": [
     {
       "method": "start",
-      "args": 0
+      "args": 2,
+      "keys": [
+        "bdd_type",
+        "alias"
+      ]
     },
     {
       "method": "add_method_to_model",
@@ -126,6 +137,23 @@
         "password",
         "port"
       ]
+    }
+  ],
+  "count": [
+    {
+      "method": "nbr_php_lines_into_project",
+      "args": 1,
+      "keys": ["part"]
+    }
+  ],
+  "debug": [
+    {
+      "method": "enable",
+      "args": 0
+    },
+    {
+      "method": "disable",
+      "args": 0
     }
   ]
 }

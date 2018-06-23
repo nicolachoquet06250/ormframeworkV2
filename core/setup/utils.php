@@ -3,6 +3,16 @@
 namespace ormframework\core\setup;
 
 class utils {
+    const BLACK_TEXT = '0;37';
+    const BLUE_TEXT = '0;34';
+    const GREEN_TEXT = '0;32';
+    const CYAN_TEXT = '0;36';
+    const RED_TEXT = '0;31';
+    const PURPLE_TEXT = '0;35';
+    const BROWN_TEXT = '0;33';
+    const YELLOW_TEXT = '1;33';
+    const WHITE_TEXT = '0;30';
+
     public static function http_get($key='') {
         return isset($_GET[$key]) ? htmlentities($_GET[$key]) : null;
     }
@@ -30,5 +40,9 @@ class utils {
     public function get_manager($type = null)
     {
         return $type ? global_manager::instence()->$type() : global_manager::instence();
+    }
+
+    public function color_cli_text($text = 'Hello', $color=self::WHITE_TEXT) {
+        return "\033[{$color}m".$text."\033[0m";
     }
 }
