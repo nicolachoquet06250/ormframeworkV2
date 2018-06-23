@@ -33,13 +33,14 @@ class utils {
         return $content;
     }
 
-	/**
-	 * @param null $type
-	 * @return \ormframework\core\managers\services_manager|\ormframework\core\managers\error_manager|\ormframework\core\setup\global_manager|\ormframework\core\managers\command_manager
-	 */
-    public function get_manager($type = null)
+    /**
+     * @param null $type
+     * @param mixed $arguments
+     * @return \ormframework\core\managers\services_manager|\ormframework\core\managers\error_manager|\ormframework\core\setup\global_manager|\ormframework\core\managers\command_manager
+     */
+    public function get_manager($type = null, $arguments = [])
     {
-        return $type ? global_manager::instence()->$type() : global_manager::instence();
+        return $type ? global_manager::instence()->$type($arguments) : global_manager::instence();
     }
 
     public function color_cli_text($text = 'Hello', $color=self::WHITE_TEXT) {

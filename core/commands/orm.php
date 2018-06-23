@@ -4,7 +4,6 @@ namespace ormframework\core\commands;
 use \Exception;
 use sql_links\factories\Request;
 use sql_links\factories\RequestConnexion;
-use sql_links\requests\Json;
 
 
 class orm extends command
@@ -15,56 +14,44 @@ class orm extends command
         $this->argv = $args;
     }
 
-    private function genere_model() {
-        $modelName = $this->get_from_name('whole');
-
-		$modelContent = "<?php
-        
-    namespace ormframework\custom\mvc\models;
-    
-    use ormframework\core\mvc\Model;
-
-    class {$modelName} extends Model { }";
-
-		file_put_contents("custom/mvc/models/{$modelName}.php", $modelContent);
+    private function genere_model($name = '') {
+        $modelName = $name === '' ? $this->get_from_name('whole') : $name;
+        $modelContent = "<?php\n\n".
+        "\tnamespace ormframework\custom\mvc\models;\n\n".
+        "\tuse ormframework\core\mvc\Model;\n\n".
+        "\tclass {$modelName} extends Model { }";
+        file_put_contents("custom/mvc/models/{$modelName}.php", $modelContent);
     }
 
-    private function genere_controller() {
-        $controllerName = $this->get_from_name('whole');
-
-        $controllerContent = "<?php
-        
-    namespace ormframework\custom\mvc\controllers;
-    
-    use ormframework\core\mvc\Controller;
-
-    class {$controllerName} extends Controller { }";
+    private function genere_controller($name = '') {
+        $controllerName = $name === '' ? $this->get_from_name('whole') : $name;
+        $controllerContent = "<?php\n\n".
+        "\tnamespace ormframework\custom\mvc\controllers;\n\n".
+        "\tuse ormframework\core\mvc\Controller;\n\n".
+        "\tclass {$controllerName} extends Controller { }";
         file_put_contents("custom/mvc/controllers/{$controllerName}.php", $controllerContent);
 
     }
 
     private function genere_entity($name = '', $properties = []) {
         $entityName = $name === '' ? $this->get_from_name('whole') : $name;
-
 		$entityContent = "<?php\n\n".
-
         "\tnamespace ormframework\custom\db_context;\n\n".
-
         "\tuse \ormframework\core\db_context\\entity;\n\n".
-
-        "\tclass {$entityName} extends entity {\n";
-
+		"\t/**\n";
+		foreach ($properties as $property => $details) {
+		    $entityContent .= "\t * @method ".(strtolower($details->type) === 'text' ? "string" : "integer")." {$property}(".(strtolower($details->type) === 'text' ? "string" : "integer")." \${$property} = null)\n";
+		}
+		$entityContent .= "\t **/\n";
+        $entityContent .= "\tclass {$entityName} extends entity {\n";
         foreach ($properties as $property => $details) {
-            if(isset($details->default)) {
-                $entityContent .= "\t\tprivate \${$property} = ".(strtolower($details->type) === 'text' ? "'{$details->default}'" : $details->default).";\n\n";
-            }
-            else {
-                $entityContent .= "\t\tprivate \${$property};\n\n";
-            }
+            $entityContent .= isset($details->default) ?
+                "\t\tprotected \${$property} = ".
+                (strtolower($details->type) === 'text' ? "'{$details->default}'" : $details->default)
+                .";\n"
+                    : "\t\tprotected \${$property};\n";
         }
-
         $entityContent .= "\t}";
-
 		file_put_contents("custom/entities/{$entityName}.php", $entityContent);
     }
 
@@ -134,11 +121,12 @@ class orm extends command
 
     /**
      * génère un ensemble (whole) de model, controllers, entities en fonction d'une bdd sql ou json
+     * @param string $name
      */
-    public function new_whole() {
-        $this->genere_controller();
-        $this->genere_model();
-        $this->genere_entity();
+    public function new_whole($name = '') {
+        $this->genere_controller($name);
+        $this->genere_model($name);
+        $this->genere_entity($name);
     }
 
 	/**
@@ -153,23 +141,24 @@ class orm extends command
     /**
      * @throws Exception
      */
-	public function start() {
+    public function start() {
         require_once 'custom/sql_links/autoload.php';
 		$alias = $this->get_from_name('alias');
 		$bdd_type = $this->get_from_name('bdd_type');
+
 		if($conf = $this->get_manager('services')->conf()->get_sql_conf($bdd_type)[$alias]) {
 		    if($bdd_type !== 'mysql' && $bdd_type !== 'pgsql')
                 $cnx_array = [
                     'database' => $conf->path_to_database.'/'.$conf->database,
                 ];
-		    else
-		        $cnx_array = (array)$conf;
+		    else $cnx_array = (array)$conf;
 
 			$request = Request::getIRequest(new RequestConnexion($cnx_array), $bdd_type);
 
 			$tables = $request->show()->tables()->query();
             foreach ($tables as $table) {
                 $filds = $request->show()->columns()->from($table)->query();
+                $this->new_whole($table);
                 $this->genere_entity($table, $filds);
             }
 		}

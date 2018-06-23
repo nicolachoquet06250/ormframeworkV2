@@ -22,7 +22,7 @@ if (DEBUG) {
 }
 
 foreach ($conf->modules as $module_name => $module_confs) {
-	if ($module_confs->disabled === true) {
+	if (isset($module_confs->disabled) && $module_confs->disabled === true) {
 		if ($module_confs->enable === true) {
 			load_module($module_name, $module_confs, $date);
 		}

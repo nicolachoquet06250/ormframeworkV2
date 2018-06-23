@@ -33,9 +33,7 @@ function load_module($module_name, $module_confs, $date) {
 	}
 }
 
-require_once 'core/setup/autoload.php';
-require_once 'custom/setup/autoload.php';
-require_once 'core/commands/autoload.php';
+require_once 'autoload.php';
 
 try {
     command::instence(command::rm_file_name_of_args($argv));

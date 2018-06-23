@@ -1,1 +1,78 @@
-{"project_name":"orm-framework","project_directory":"ormframeworkV2","project_version":"0.0.1","debug":false,"modules":{"setup":{"version":1,"location":"setup","disabled":false,"autoload":true,"service":"HttpRequest"},"mvc":{"version":"0.0.1","location":"mvc","disabled":false,"autoload":true},"annotation":{"version":"0.0.1","location":"annotation","enable":true,"disabled":true,"autoload":true},"dbcontext":{"version":"0.0.1","location":"db_context","enable":true,"disabled":true,"autoload":true},"translate":{"version":"0.0.1","location":"translate","enable":true,"disabled":true,"autoload":true,"service":"translate"},"errors":{"version":"0.0.1","location":"errors","enable":true,"disabled":true,"autoload":true,"service":"errors"},"command":{"version":"0.0.1","location":"commands","disabled":false,"autoload":true,"service":"command"},"api":{"version":"0.0.1","location":"api","enable":true,"autoload":true,"repository":{"type":"git","path":"https:\/\/github.com\/nicolachoquet06250\/ormframework_api.git"}},"sql_links":{"version":"0.0.1","location":"sql_links","enable":true,"autoload":true,"repository":{"type":"git","path":"https:\/\/github.com\/nicolachoquet06250\/SqlLinks.git"}}}}
+{
+  "project_name": "orm-framework",
+  "project_directory": "ormframeworkV2",
+  "project_version": "0.0.1",
+  "debug": false,
+  "modules": {
+    "setup": {
+      "version": 1,
+      "location": "setup",
+      "disabled": false,
+      "autoload": true,
+      "service": "HttpRequest"
+    },
+    "mvc": {
+      "version": "0.0.1",
+      "location": "mvc",
+      "disabled": false,
+      "autoload": true
+    },
+    "annotation": {
+      "version": "0.0.1",
+      "location": "annotation",
+      "enable": true,
+      "disabled": true,
+      "autoload": true
+    },
+    "dbcontext": {
+      "version": "0.0.1",
+      "location": "db_context",
+      "enable": true,
+      "disabled": true,
+      "autoload": true
+    },
+    "translate": {
+      "version": "0.0.1",
+      "location": "translate",
+      "enable": true,
+      "disabled": true,
+      "autoload": true,
+      "service": "translate"
+    },
+    "errors": {
+      "version": "0.0.1",
+      "location": "errors",
+      "enable": true,
+      "disabled": true,
+      "autoload": true,
+      "service": "errors"
+    },
+    "command": {
+      "version": "0.0.1",
+      "location": "commands",
+      "disabled": false,
+      "autoload": true,
+      "service": "command"
+    },
+    "api": {
+      "version": "0.0.1",
+      "location": "api",
+      "enable": true,
+      "autoload": true,
+      "repository": {
+        "type": "git",
+        "path": "https:\/\/github.com\/nicolachoquet06250\/ormframework_api.git"
+      }
+    },
+    "sql_links": {
+      "version": "0.0.1",
+      "location": "sql_links",
+      "enable": true,
+      "autoload": true,
+      "repository": {
+        "type": "git",
+        "path": "https:\/\/github.com\/nicolachoquet06250\/SqlLinks.git"
+      }
+    }
+  }
+}
