@@ -33,7 +33,7 @@ class entity extends utils
         return $this->$name;
     }
 
-    private function get_props() {
+    public function get_props() {
         $this_vars = get_object_vars($this);
         $entity_vars = get_object_vars(new entity());
         foreach ($entity_vars as $entity_var => $entity_var_val) {
@@ -42,7 +42,7 @@ class entity extends utils
         return $this_vars;
     }
 
-    private function get_not_null_props() {
+    public function get_not_null_props() {
         $props = $this->get_props();
         $tmp = [];
         foreach ($props as $prop => $value) {
@@ -80,5 +80,16 @@ class entity extends utils
 
             $this->request->update($table)->set($this_vars)->where($id)->query();
         }
+    }
+
+    public function get_for_view() {
+        $obj = $this;
+        unset($obj->request);
+        unset($obj->autosave);
+        $tmp = new \stdClass();
+        foreach (get_object_vars($obj) as $name => $value) {
+            $tmp->$name = $value;
+        }
+        return $tmp;
     }
 }

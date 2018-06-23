@@ -14,4 +14,14 @@ class Model extends \ormframework\core\setup\utils implements \ormframework\core
     function argv_is_assoc() {
         return $this->is_assoc;
     }
+
+    /**
+     * @param $name
+     * @param $args
+     * @return mixed
+     */
+    public function get_from_name($name, $args)
+    {
+        return isset($args[$name]) ? $args[$name] : null;
+    }
 }

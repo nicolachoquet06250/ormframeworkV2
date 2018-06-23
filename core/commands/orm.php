@@ -2,6 +2,7 @@
 namespace ormframework\core\commands;
 
 use \Exception;
+use ormframework\core\db_context\entity;
 use sql_links\factories\Request;
 use sql_links\factories\RequestConnexion;
 
@@ -15,11 +16,159 @@ class orm extends command
     }
 
     private function genere_model($name = '') {
+
         $modelName = $name === '' ? $this->get_from_name('whole') : $name;
+
+        $methods = [
+            [
+                "annotations" => [
+                    "model" => $modelName,
+                    "description" => "récupère tous les {$modelName}",
+                    "method" => "get",
+                    "param" => "mixed \$args",
+                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "route" => $modelName.'/get',
+                    "throws" => "\\Exception"
+                ],
+                "name" => "get",
+                "content" => [
+                    "if(\$conf = \$this->get_manager('services')->conf()->get_sql_conf('{$this->get_from_name('bdd_type')}')['{$this->get_from_name('alias')}']) {\n",
+                    "\t\$request = Request::getIRequest(new RequestConnexion((array)\$conf, '{$this->get_from_name('bdd_type')}'), '{$this->get_from_name('bdd_type')}');\n",
+                    "\t\$retour = \$request->select()->from('{$modelName}')->query();\n",
+                    "}\n",
+                    "else {\n",
+                    "\t\$retour = [];\n",
+                    "}\n",
+                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                ]
+            ],
+            [
+                "annotations" => [
+                    "model" => $modelName,
+                    "description" => "ajoute un {$modelName}",
+                    "method" => "add",
+                    "param" => "mixed \$args",
+                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "route" => $modelName.'/add',
+                    "throws" => "\\Exception"
+                ],
+                "name" => "add",
+                "content" => [
+                    "if(\$conf = \$this->get_manager('services')->conf()->get_sql_conf('{$this->get_from_name('bdd_type')}')['{$this->get_from_name('alias')}']) {\n",
+                    "\t\$request = Request::getIRequest(new RequestConnexion((array)\$conf, '{$this->get_from_name('bdd_type')}'), '{$this->get_from_name('bdd_type')}');\n",
+                    "\t\${$modelName} = new \ormframework\custom\db_context\\".$modelName."(\$request, false, [{params_array}]);\n",
+                    "\t\${$modelName}->add();\n",
+                    "\t\$retour = \$request->select()->from('{$modelName}')->query();\n",
+                    "}\n",
+                    "else {\n",
+                    "\t\$retour = [];\n",
+                    "}\n",
+                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                ]
+            ],
+            [
+                "annotations" => [
+                    "model" => $modelName,
+                    "description" => "supprime un {$modelName}",
+                    "method" => "delete",
+                    "param" => "mixed \$args",
+                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "route" => $modelName.'/delete',
+                    "throws" => "\\Exception"
+                ],
+                "name" => "delete",
+                "content" => [
+                    "if(\$conf = \$this->get_manager('services')->conf()->get_sql_conf('{$this->get_from_name('bdd_type')}')['{$this->get_from_name('alias')}']) {\n",
+                    "\t\$request = Request::getIRequest(new RequestConnexion((array)\$conf, '{$this->get_from_name('bdd_type')}'), '{$this->get_from_name('bdd_type')}');\n",
+                    "\t\${$modelName} = new \ormframework\custom\db_context\\".$modelName."(\$request, false, [['id' => \$this->get_from_name('id', \$args)]]);\n",
+                    "\t\${$modelName}->remove();\n",
+                    "\t\$retour = \$request->select()->from('{$modelName}')->query();\n",
+                    "}\n",
+                    "else {\n",
+                    "\t\$retour = [];\n",
+                    "}\n",
+                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                ]
+            ],
+            [
+                "annotations" => [
+                    "model" => $modelName,
+                    "description" => "modifie certains champs d'un {$modelName}",
+                    "method" => "update",
+                    "param" => "mixed \$args",
+                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "route" => $modelName.'/update',
+                    "throws" => "\\Exception"
+                ],
+                "name" => "update",
+                "content" => [
+                    "if(\$conf = \$this->get_manager('services')->conf()->get_sql_conf('{$this->get_from_name('bdd_type')}')['{$this->get_from_name('alias')}']) {\n",
+                    "\t\$request = Request::getIRequest(new RequestConnexion((array)\$conf, '{$this->get_from_name('bdd_type')}'), '{$this->get_from_name('bdd_type')}');\n",
+                    "\t/**\n",
+                    "\t * @var \ormframework\core\db_context\\entity \${$modelName}\n",
+                    "\t */\n",
+                    "\t\${$modelName} = \$request->select()->from('{$modelName}')->where(['id' => \$this->get_from_name('id', \$args)])->query()[0];\n",
+                    "\tforeach(\${$modelName}->get_not_null_props() as \$prop) {\n",
+                    "\t\tif(\$this->get_from_name(\$prop, \$args) !== null) {\n",
+                    "\t\t\t\${$modelName}->\$prop(\$this->get_from_name(\$prop, \$args));\n",
+                    "\t\t}\n",
+                    "\t}\n",
+                    "\t\$retour = \$request->select()->from('{$modelName}')->query();\n",
+                    "}\n",
+                    "else {\n",
+                    "\t\$retour = [];\n",
+                    "}\n",
+                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                ]
+            ],
+        ];
         $modelContent = "<?php\n\n".
         "\tnamespace ormframework\custom\mvc\models;\n\n".
-        "\tuse ormframework\core\mvc\Model;\n\n".
-        "\tclass {$modelName} extends Model { }";
+        "\tuse ormframework\core\mvc\Model;\n".
+        "\tuse \ormframework\custom\setup\utils;\n\n".
+        "\tuse sql_links\\factories\Request;\n".
+        "\tuse sql_links\\factories\RequestConnexion;\n".
+        "\tclass {$modelName} extends Model {\n";
+        $modelContent .= "\t\tprivate \$my_utils;\n".
+        "\t\tpublic function __construct(\$is_assoc)\n".
+        "\t\t{\n".
+        "\t\t\tparent::__construct(\$is_assoc);\n".
+        "\t\t\t\$this->my_utils = new utils();\n".
+        "\t\t}\n\n";
+        $entity = "\\ormframework\\custom\\db_context\\".$methods[0]['annotations']['model'];
+        /**
+         * @var entity $entity
+         */
+        $entity = new $entity();
+        $props = array_keys($entity->get_props());
+        foreach ($props as $id => $prop) {
+            if($prop === 'id') {
+                unset($props[$id]);
+            }
+        }
+        $params_array = [];
+        foreach ($props as $prop) {
+            $params_array[] = "'{$prop}' => \$this->get_from_name('{$prop}', \$args)";
+        }
+        foreach ($methods as $method) {
+            $modelContent .= "\t\t/**\n";
+            foreach ($method['annotations'] as $annotation => $annotation_value) {
+                $modelContent .= "\t\t * @{$annotation} {$annotation_value}\n";
+            }
+            $modelContent .= "\t\t **/\n";
+
+            $modelContent .= "\t\tpublic function {$method['name']}(\$args = []) {\n";
+
+            foreach ($method['content'] as $i => $content) {
+                $method['content'][$i] = str_replace('{params_array}', implode(', ', $params_array), $content);
+            }
+
+            $modelContent .= "\t\t\t".(gettype($method['content']) === 'array' ? implode("\t\t\t", $method['content']) : $method['content'])."\n";
+
+            $modelContent .= "\t\t}\n\n";
+        }
+
+        $modelContent.= "\t}";
         file_put_contents("custom/mvc/models/{$modelName}.php", $modelContent);
     }
 
@@ -147,13 +296,7 @@ class orm extends command
 		$bdd_type = $this->get_from_name('bdd_type');
 
 		if($conf = $this->get_manager('services')->conf()->get_sql_conf($bdd_type)[$alias]) {
-		    if($bdd_type !== 'mysql' && $bdd_type !== 'pgsql')
-                $cnx_array = [
-                    'database' => $conf->path_to_database.'/'.$conf->database,
-                ];
-		    else $cnx_array = (array)$conf;
-
-			$request = Request::getIRequest(new RequestConnexion($cnx_array), $bdd_type);
+			$request = Request::getIRequest(new RequestConnexion((array)$conf, $bdd_type), $bdd_type);
 
 			$tables = $request->show()->tables()->query();
             foreach ($tables as $table) {
@@ -161,6 +304,8 @@ class orm extends command
                 $this->new_whole($table);
                 $this->genere_entity($table, $filds);
             }
+
+            //var_dump($request->select()->from('user')->where(['id' => 0])->query());
 		}
 	}
 }
