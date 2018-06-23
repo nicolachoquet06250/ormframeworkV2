@@ -25,7 +25,7 @@ class return_annotation implements \ormframework\core\annotation\interfaces\anno
 	}
 
 	public function to_html(int $id, $model='') {
-		$return = str_replace('_view', '', $this->get($id, $model));
+		$return = $this->get($id, $model);
 		return "<div class='col-12'>
                     type de retour : {$return}
                 </div>";

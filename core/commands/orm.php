@@ -24,9 +24,9 @@ class orm extends command
     
     use ormframework\core\mvc\Model;
 
-    class {$modelName}_controller extends Model { }";
+    class {$modelName} extends Model { }";
 
-		file_put_contents("custom/mvc/models/{$modelName}_model.php", $modelContent);
+		file_put_contents("custom/mvc/models/{$modelName}.php", $modelContent);
     }
 
     private function genere_controller() {
@@ -38,21 +38,32 @@ class orm extends command
     
     use ormframework\core\mvc\Controller;
 
-    class {$controllerName}_controller extends Controller { }";
-        file_put_contents("custom/mvc/controllers/{$controllerName}_controller.php", $controllerContent);
+    class {$controllerName} extends Controller { }";
+        file_put_contents("custom/mvc/controllers/{$controllerName}.php", $controllerContent);
 
     }
 
-    private function genere_entity() {
-        $entityName = $this->get_from_name('whole');
+    private function genere_entity($name = '', $properties = []) {
+        $entityName = $name === '' ? $this->get_from_name('whole') : $name;
 
-		$entityContent = "<?php
+		$entityContent = "<?php\n\n".
 
-	namespace ormframework\custom\db_context;
+        "\tnamespace ormframework\custom\db_context;\n\n".
 
-	use \ormframework\core\db_context\\entity;
+        "\tuse \ormframework\core\db_context\\entity;\n\n".
 
-    class {$entityName} extends entity { }";
+        "\tclass {$entityName} extends entity {\n";
+
+        foreach ($properties as $property => $details) {
+            if(isset($details->default)) {
+                $entityContent .= "\t\tprivate \${$property} = ".(strtolower($details->type) === 'text' ? "'{$details->default}'" : $details->default).";\n\n";
+            }
+            else {
+                $entityContent .= "\t\tprivate \${$property};\n\n";
+            }
+        }
+
+        $entityContent .= "\t}";
 
 		file_put_contents("custom/entities/{$entityName}.php", $entityContent);
     }
@@ -64,12 +75,12 @@ class orm extends command
 
 	private function rm_model() {
 		$modelName = $this->get_from_name('whole');
-		unlink("custom/mvc/models/{$modelName}_model.php");
+		unlink("custom/mvc/models/{$modelName}.php");
 	}
 
 	private function rm_controller() {
 		$controllerName = $this->get_from_name('whole');
-		unlink("custom/mvc/controllers/{$controllerName}_controller.php");
+		unlink("custom/mvc/controllers/{$controllerName}.php");
 	}
 
 	/**
@@ -86,7 +97,7 @@ class orm extends command
 		$description = $this->get_from_name('description');
 		$route = $this->get_from_name('route');
 
-		$model_content = file_get_contents("custom/mvc/models/{$model}_model.php");
+		$model_content = file_get_contents("custom/mvc/models/{$model}.php");
 
 		if(!$description) {
 			$description = readline('donnez une rapide description : ');
@@ -94,7 +105,7 @@ class orm extends command
 		if(!$retour) {
 			$retour = readline('donnez le type de retour de la méthode : ');
 		}
-		$retour = ucfirst($retour).'_view';
+		$retour = ucfirst($retour);
 
 		$method_content = "
 	/**
@@ -115,7 +126,7 @@ class orm extends command
 		global $path_prefix;
 
 		if(!strstr($model_content, "public function {$method}(")) {
-			file_put_contents($path_prefix."custom/mvc/models/{$model}_model.php", $new_model_content);
+			file_put_contents($path_prefix."custom/mvc/models/{$model}.php", $new_model_content);
 			return true;
 		}
 		throw new \Exception("La méthode {$method} du model {$model} existe déja");
@@ -146,37 +157,21 @@ class orm extends command
         require_once 'custom/sql_links/autoload.php';
 		$alias = $this->get_from_name('alias');
 		$bdd_type = $this->get_from_name('bdd_type');
-		if($conf = $this->get_manager('services')->conf()->get_sql_conf($bdd_type)) {
-			$connexion = $conf[$alias];
-			$cnx = new RequestConnexion(
-			    [
-			        'database' => $connexion->path_to_database.'/'.$connexion->database
-                ]
-            );
-			$request = Request::getIRequest($cnx, 'json');
-            $request->create(Json::TABLE, 'user')
-                    ->set([
-                        'id' => [
-                            'type' 		=> 'INT',
-                            'key' 		=> 'primary',
-                            'increment' => 'auto',
-                        ],
-                        'nom' => [
-                            'type'		=> 'TEXT',
-                        ],
-                        'prenom' => [
-                            'type' 		=> 'TEXT',
-                        ],
-                        'age' => [
-                            'type' 		=> 'INT',
-                        ],
-                        'ecole' => [
-                            'type'		=> 'TEXT',
-                            'default'	=> 'CampusID',
-                        ],
-                    ])->query();
+		if($conf = $this->get_manager('services')->conf()->get_sql_conf($bdd_type)[$alias]) {
+		    if($bdd_type !== 'mysql' && $bdd_type !== 'pgsql')
+                $cnx_array = [
+                    'database' => $conf->path_to_database.'/'.$conf->database,
+                ];
+		    else
+		        $cnx_array = (array)$conf;
+
+			$request = Request::getIRequest(new RequestConnexion($cnx_array), $bdd_type);
+
 			$tables = $request->show()->tables()->query();
-			var_dump($tables);
+            foreach ($tables as $table) {
+                $filds = $request->show()->columns()->from($table)->query();
+                $this->genere_entity($table, $filds);
+            }
 		}
 	}
 }

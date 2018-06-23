@@ -55,7 +55,7 @@ class PhpDocParser extends utils
 
 		//récupération du nom de model et controller
 		preg_replace_callback($regex_class_model, function ($matches) use (&$class) {
-			$class = str_replace('_model', '', $matches[1]);
+			$class = $matches[1];
 		}, $content);
 
 		//récupération d'un tableau d'information sur chaque méthode

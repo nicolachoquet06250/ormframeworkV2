@@ -3,6 +3,7 @@
 namespace ormframework\core\setup;
 
 use \Exception;
+use \ormframework\custom\mvc\views\Json;
 
 class setup extends utils
 {
@@ -79,9 +80,9 @@ class setup extends utils
      * @param $argv
      */
     private function start(array $argv) {
-        if(file_exists("custom/mvc/controllers/{$argv['controller']}_controller.php")) {
+        if(file_exists("custom/mvc/controllers/{$argv['controller']}.php")) {
         	$namespace = '\\ormframework\\custom\\mvc\\controllers\\';
-            $controllerName = $argv['controller'].'_controller';
+            $controllerName = $argv['controller'];
             $controller = $namespace.$controllerName;
             echo (new $controller($argv['method'], $argv['argv'], $this->argv_is_assoc()))
                 ->response()->display();
@@ -91,7 +92,7 @@ class setup extends utils
                 ${404} = $this->get_manager('error')->error_404();
                 ${404}->message = "Controller `{$argv['controller']}` not found";
                 ${404}->header();
-                echo (new \ormframework\custom\mvc\views\Json_view(${404}))->display();
+                echo (new Json(${404}))->display();
             }
             catch (Exception $e) {
                 exit($e->getMessage());

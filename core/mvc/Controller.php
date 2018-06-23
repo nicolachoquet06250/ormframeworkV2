@@ -3,7 +3,7 @@
 namespace ormframework\core\mvc;
 
 use \Exception;
-use \ormframework\custom\mvc\views\Json_view;
+use \ormframework\custom\mvc\views\Json;
 use ormframework\core\mvc\interfaces\Controller_interface;
 
 class Controller extends \ormframework\core\setup\utils implements Controller_interface
@@ -28,8 +28,7 @@ class Controller extends \ormframework\core\setup\utils implements Controller_in
      */
     public function response(): view
     {
-        $model = str_replace('_controller', '_model', get_class($this));
-        $model = str_replace('controllers', 'models', $model);
+        $model = str_replace('controllers', 'models', get_class($this));
         $method = $this->method;
 
         if(get_class_methods($model)) {
@@ -38,9 +37,8 @@ class Controller extends \ormframework\core\setup\utils implements Controller_in
 			}
 		}
         ${404} = $this->get_manager('error')->error_404();
-        $model = str_replace('_model', '', $model);
         ${404}->message = "method `{$method}` not found in model `{$model}`";
         ${404}->header();
-        throw new Exception((new Json_view(${404}))->display());
+        throw new Exception((new Json(${404}))->display());
     }
 }
