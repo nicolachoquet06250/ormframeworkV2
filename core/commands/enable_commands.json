@@ -155,5 +155,15 @@
       "method": "disable",
       "args": 0
     }
+  ],
+  "migration": [
+    {
+      "method": "database",
+      "args": 2,
+      "keys": [
+        "dbb_type",
+        "alias"
+      ]
+    }
   ]
 }

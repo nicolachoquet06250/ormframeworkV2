@@ -3,7 +3,6 @@
 namespace ormframework\core\db_context;
 
 use ormframework\core\setup\utils;
-use sql_links\factories\Request;
 use sql_links\interfaces\IRequest;
 
 /**
@@ -100,6 +99,10 @@ class entity extends utils
         }
         $this->request = $request;
         return $this;
+    }
+
+    public function name() {
+        return explode('\\', get_class($this))[count(explode('\\', get_class($this)))-1];
     }
 
     public function add() {
