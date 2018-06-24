@@ -26,7 +26,7 @@ class orm extends command
                     "description" => "récupère tous les {$modelName}",
                     "method" => "get",
                     "param" => "mixed \$args",
-                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "return" => "Json",
                     "route" => $modelName.'/get',
                     "throws" => "\\Exception"
                 ],
@@ -34,7 +34,7 @@ class orm extends command
                 "content" => [
                     "if(\$conf = \$this->get_manager('services')->conf()->get_sql_conf('{$this->get_from_name('bdd_type')}')['{$this->get_from_name('alias')}']) {\n",
                     "\t\$request = Request::getIRequest(new RequestConnexion((array)\$conf, '{$this->get_from_name('bdd_type')}'), '{$this->get_from_name('bdd_type')}');\n",
-                    "\t\$retour = \$request->select()->from('{$modelName}')->query();\n",
+                    "\t\$retour = \$request->select()->from('{$modelName}')->query()->get(\$this->get_from_name('id', \$args));\n",
                     "}\n",
                     "else {\n",
                     "\t\$retour = [];\n",
@@ -48,7 +48,7 @@ class orm extends command
                     "description" => "ajoute un {$modelName}",
                     "method" => "add",
                     "param" => "mixed \$args",
-                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "return" => "Json",
                     "route" => $modelName.'/add',
                     "throws" => "\\Exception"
                 ],
@@ -58,7 +58,7 @@ class orm extends command
                     "\t\$request = Request::getIRequest(new RequestConnexion((array)\$conf, '{$this->get_from_name('bdd_type')}'), '{$this->get_from_name('bdd_type')}');\n",
                     "\t\${$modelName} = new \ormframework\custom\db_context\\".$modelName."(\$request, false, [{params_array}]);\n",
                     "\t\${$modelName}->add();\n",
-                    "\t\$retour = \$request->select()->from('{$modelName}')->query();\n",
+                    "\t\$retour = \$request->select()->from('{$modelName}')->query()->get();\n",
                     "}\n",
                     "else {\n",
                     "\t\$retour = [];\n",
@@ -72,7 +72,7 @@ class orm extends command
                     "description" => "supprime un {$modelName}",
                     "method" => "delete",
                     "param" => "mixed \$args",
-                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "return" => "Json",
                     "route" => $modelName.'/delete',
                     "throws" => "\\Exception"
                 ],
@@ -82,7 +82,7 @@ class orm extends command
                     "\t\$request = Request::getIRequest(new RequestConnexion((array)\$conf, '{$this->get_from_name('bdd_type')}'), '{$this->get_from_name('bdd_type')}');\n",
                     "\t\${$modelName} = new \ormframework\custom\db_context\\".$modelName."(\$request, false, [['id' => \$this->get_from_name('id', \$args)]]);\n",
                     "\t\${$modelName}->remove();\n",
-                    "\t\$retour = \$request->select()->from('{$modelName}')->query();\n",
+                    "\t\$retour = \$request->select()->from('{$modelName}')->query()->get();\n",
                     "}\n",
                     "else {\n",
                     "\t\$retour = [];\n",
@@ -96,7 +96,7 @@ class orm extends command
                     "description" => "modifie certains champs d'un {$modelName}",
                     "method" => "update",
                     "param" => "mixed \$args",
-                    "return" => "\ormframework\custom\mvc\\views\Json",
+                    "return" => "Json",
                     "route" => $modelName.'/update',
                     "throws" => "\\Exception"
                 ],
@@ -107,7 +107,7 @@ class orm extends command
                     "\t/**\n",
                     "\t * @var \ormframework\core\db_context\\entity \${$modelName}\n",
                     "\t */\n",
-                    "\t\${$modelName} = \$request->select()->from('{$modelName}')->where(['id' => \$this->get_from_name('id', \$args)])->query()[0];\n",
+                    "\t\${$modelName} = \$request->select()->from('{$modelName}')->where(['id' => \$this->get_from_name('id', \$args)])->query()->get(0);\n",
                     "\tforeach(\${$modelName}->get_not_null_props() as \$prop) {\n",
                     "\t\tif(\$this->get_from_name(\$prop, \$args) !== null) {\n",
                     "\t\t\t\${$modelName}->\$prop(\$this->get_from_name(\$prop, \$args));\n",
@@ -125,9 +125,10 @@ class orm extends command
         $modelContent = "<?php\n\n".
         "\tnamespace ormframework\custom\mvc\models;\n\n".
         "\tuse ormframework\core\mvc\Model;\n".
-        "\tuse \ormframework\custom\setup\utils;\n\n".
+        "\tuse \ormframework\custom\setup\utils;\n".
         "\tuse sql_links\\factories\Request;\n".
         "\tuse sql_links\\factories\RequestConnexion;\n".
+        "\tuse \ormframework\custom\mvc\\views\Json;\n\n".
         "\tclass {$modelName} extends Model {\n";
         $modelContent .= "\t\tprivate \$my_utils;\n".
         "\t\tpublic function __construct(\$is_assoc)\n".

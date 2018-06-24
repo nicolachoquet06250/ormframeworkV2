@@ -83,12 +83,14 @@ class ListOf
      * @return entity
      * @throws Exception
      */
-    public function get($id) {
-        if(isset($this->entitiesArray[$id])) {
-            return $this->entitiesArray[$id];
+    public function get($id = null) {
+        if($id) {
+            if (isset($this->entitiesArray[$id])) {
+                return $this->entitiesArray[$id];
+            } else {
+                throw new Exception("{$id} out of range");
+            }
         }
-        else {
-            throw new Exception("{$id} out of range");
-        }
+        return $this->entitiesArray;
     }
 }
