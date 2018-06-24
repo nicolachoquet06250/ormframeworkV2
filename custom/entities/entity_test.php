@@ -4,8 +4,12 @@ namespace ormframework\custom\db_context;
 
 use \ormframework\core\db_context\entity;
 
+/**
+ * @method array|entity_test say(array $say = null)
+ * @method string|entity_test toto(string $toto = null)
+ **/
 class entity_test extends entity
 {
-    public $say;
-    public $toto;
+    protected $say;
+    protected $toto;
 }

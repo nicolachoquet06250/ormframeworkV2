@@ -10,4 +10,4 @@ require_once 'Controller.php';
 require_once 'Model.php';
 
 if(DEBUG)
-    log_loading_module($date, 'module '.$module_name.'-core chargé en version '.$module_confs->version);
+    Loading::log_loading_module($date, 'module '.$module_name.'-core chargé en version '.$module_confs->version);

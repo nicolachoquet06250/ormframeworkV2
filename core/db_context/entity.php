@@ -3,15 +3,20 @@
 namespace ormframework\core\db_context;
 
 use ormframework\core\setup\utils;
+use sql_links\factories\Request;
 use sql_links\interfaces\IRequest;
 
+/**
+ * Class entity
+ * @package ormframework\core\db_context
+ */
 class entity extends utils
 {
     protected $request, $autosave;
     public function __construct(IRequest $request = null, $autosave = false, $fields = [])
     {
-        $this->request = $request;
-        $this->autosave = $autosave;
+        $this->request($request);
+        $this->autosave($autosave);
         foreach ($fields as $champ => $value) {
             if(in_array($champ, array_keys($this->get_props()))) {
                 $this->$champ = $value;
@@ -33,6 +38,9 @@ class entity extends utils
         return $this->$name;
     }
 
+    /**
+     * @return array
+     */
     public function get_props() {
         $this_vars = get_object_vars($this);
         $entity_vars = get_object_vars(new entity());
@@ -42,6 +50,9 @@ class entity extends utils
         return $this_vars;
     }
 
+    /**
+     * @return array
+     */
     public function get_not_null_props() {
         $props = $this->get_props();
         $tmp = [];
@@ -51,6 +62,44 @@ class entity extends utils
             }
         }
         return $tmp;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    public function get_for_view() {
+        $obj = $this;
+        unset($obj->request);
+        unset($obj->autosave);
+        $tmp = new \stdClass();
+        foreach (get_object_vars($obj) as $name => $value) {
+            $tmp->$name = $value;
+        }
+        return $tmp;
+    }
+
+    /**
+     * @param bool|entity|null $autosave
+     * @return $this
+     */
+    public function autosave(bool $autosave = null) {
+        if($autosave === null) {
+            return $this->autosave;
+        }
+        $this->autosave = $autosave;
+        return $this;
+    }
+
+    /**
+     * @param IRequest|entity|null $request
+     * @return $this
+     */
+    public function request(IRequest $request = null) {
+        if($request === null) {
+            return $this->request;
+        }
+        $this->request = $request;
+        return $this;
     }
 
     public function add() {
@@ -80,16 +129,5 @@ class entity extends utils
 
             $this->request->update($table)->set($this_vars)->where($id)->query();
         }
-    }
-
-    public function get_for_view() {
-        $obj = $this;
-        unset($obj->request);
-        unset($obj->autosave);
-        $tmp = new \stdClass();
-        foreach (get_object_vars($obj) as $name => $value) {
-            $tmp->$name = $value;
-        }
-        return $tmp;
     }
 }

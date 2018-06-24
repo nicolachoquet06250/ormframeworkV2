@@ -76,7 +76,7 @@ class initialize_dependences extends utils
                     $start = "<?php\n".
                     "\tnamespace ormframework;\n";
                     $end = "\tif(DEBUG)\n".
-                    "\t\tlog_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+                    "\t\tLoading::log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
                     $body = '';
 
                     parcour_dir($module->location['custom'], $module->location['custom'], $body);
@@ -88,14 +88,14 @@ class initialize_dependences extends utils
                         file_put_contents("{$module->location['core']}/autoload.php", "<?php\n".
                         "\tnamespace ormframework;\n\n".
                         "\tif(DEBUG)\n".
-                        "\n\nlog_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
+                        "\n\nLoading::log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
                     }
 
                     if ($module->autoload['custom']) {
                         $start = "<?php\n
                         namespace ormframework;\n";
                         $end = "if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+            Loading::log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
                         $body = '';
 
                         parcour_dir($module->location['custom'], $module->location['custom'], $body);

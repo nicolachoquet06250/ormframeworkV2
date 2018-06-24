@@ -4,6 +4,12 @@ namespace ormframework;
 
 use ormframework\core\commands\command;
 use \Exception;
+use ormframework\core\setup\ListOf;
+use ormframework\custom\db_context\entity_test;
+use ormframework\custom\db_context\user;
+use sql_links\factories\Request;
+use sql_links\factories\RequestConnexion;
+use sql_links\interfaces\IRequest;
 
 define(
 	'DEBUG',
@@ -13,26 +19,7 @@ define(
 if(DEBUG)
 	ini_set('display_errors', 'on');
 
-function log_loading_module($date, $content, $type = 'success') {
-	$type = $type === 'success' ? 'SUCCESS' : 'ERROR';
-	$logs = file_get_contents("logs/{$date}.log");
-	file_put_contents("logs/{$date}.log", $logs.$date.' [ '.$type.' ] => '.$content.''."\n");
-}
-
-function load_module($module_name, $module_confs, $date) {
-	if ($module_confs->autoload === true) {
-		require_once $module_confs->location['core'].'/autoload.php';
-		require_once $module_confs->location['custom'].'/autoload.php';
-	} else {
-		if ($module_confs->autoload['core']) {
-			require_once $module_confs->location['core'].'/autoload.php';
-		}
-		if ($module_confs->autoload['custom']) {
-			require_once $module_confs->location['custom'].'/autoload.php';
-		}
-	}
-}
-
+require_once 'Loading.php';
 require_once 'autoload.php';
 
 try {

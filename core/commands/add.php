@@ -152,7 +152,7 @@ class add extends command
                     $start = "<?php\n
             namespace ormframework;\n";
                     $end = "if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+            Loading::log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
                     $body = '';
 
                     parcour_dir("custom/{$pathCustom}", "custom/{$pathCustom}", $body);
@@ -170,7 +170,7 @@ class add extends command
             namespace ormframework;\n
                     
         if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
+            Loading::log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
             }
             $this->get_manager('services')->conf()->add_module('core', $moduleName, $moduleCore);
 
@@ -182,7 +182,7 @@ class add extends command
             namespace ormframework;\n
                     
         if(DEBUG)
-            log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
+            Loading::log_loading_module(\$date, 'module '.\$module_name.'-core chargé en version '.\$module_confs->version);");
 				}
 				$moduleCore['repository'] = [
 					'type' => 'git',
@@ -208,7 +208,7 @@ class add extends command
 							$start = "<?php\n
 				namespace ormframework;\n";
 							$end   = "if(DEBUG)
-				log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
+				Loading::log_loading_module(\$date, 'module '.\$module_name.'-custom chargé en version '.\$module_confs->version);";
 							$body  = '';
 
 							parcour_dir("custom/{$pathCustom}", "custom/$pathCustom", $body);
