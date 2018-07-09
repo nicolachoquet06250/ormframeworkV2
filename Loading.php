@@ -26,4 +26,13 @@ class Loading
             }
         }
     }
+
+    public static function module_exists($module_confs) {
+        if(isset($module_confs->location['custom'])) {
+            return is_dir($module_confs->location['core']) && is_dir($module_confs->location['custom']);
+        }
+        else {
+            return is_dir($module_confs->location['core']);
+        }
+    }
 }

@@ -142,7 +142,7 @@ class add extends command
         if(isset($this->get_manager('services')->conf()->get_modules_conf()->modules->$moduleName)) {
             throw new Exception("Le module {$moduleName} exite déja");
         }
-
+        $path = $this->get_from_name('path') ? $this->get_from_name('path') : $this->argv[0];
         if (is_dir($path = ($this->get_from_name('path') ? $this->get_from_name('path') : $this->argv[0]))) {
             // partie custom
             // copie de la lib dans un module

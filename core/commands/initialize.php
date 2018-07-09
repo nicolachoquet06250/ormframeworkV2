@@ -3,7 +3,7 @@
 namespace ormframework\core\commands;
 
 
-use ormframework\core\commands\command;
+use ormframework\initialize_dependences;
 
 class initialize extends command
 {
@@ -15,6 +15,6 @@ class initialize extends command
     public function dependencies() {
         require_once 'initialize_dependences.php';
 
-        \ormframework\initialize_dependences::go();
+        initialize_dependences::go();
     }
 }

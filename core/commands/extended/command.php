@@ -3,8 +3,9 @@
 namespace ormframework\core\commands;
 
 use \Exception;
+use ormframework\core\commands\interfaces\commande;
 
-class command extends \ormframework\core\setup\utils implements \ormframework\core\commands\interfaces\commande_interface
+class command extends \ormframework\core\setup\utils implements commande
 {
 
     private static $instence;

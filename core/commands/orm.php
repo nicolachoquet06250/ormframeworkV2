@@ -15,9 +15,9 @@ class orm extends command
         $this->argv = $args;
     }
 
-    private function genere_model($name = '') {
+    private function genere_model() {
 
-        $modelName = $name === '' ? $this->get_from_name('whole') : $name;
+        $modelName = $this->get_from_name('whole');
 
         $methods = [
             [
@@ -39,7 +39,7 @@ class orm extends command
                     "else {\n",
                     "\t\$retour = [];\n",
                     "}\n",
-                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                    "return new Json(\$retour);\n"
                 ]
             ],
             [
@@ -63,7 +63,7 @@ class orm extends command
                     "else {\n",
                     "\t\$retour = [];\n",
                     "}\n",
-                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                    "return new Json(\$retour);\n"
                 ]
             ],
             [
@@ -87,7 +87,7 @@ class orm extends command
                     "else {\n",
                     "\t\$retour = [];\n",
                     "}\n",
-                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                    "return new Json(\$retour);\n"
                 ]
             ],
             [
@@ -118,7 +118,7 @@ class orm extends command
                     "else {\n",
                     "\t\$retour = [];\n",
                     "}\n",
-                    "return new \ormframework\custom\mvc\\views\Json(\$retour);\n"
+                    "return new Json(\$retour);\n"
                 ]
             ],
         ];
@@ -137,6 +137,7 @@ class orm extends command
         "\t\t\t\$this->my_utils = new utils();\n".
         "\t\t}\n\n";
         $entity = "\\ormframework\\custom\\db_context\\".$methods[0]['annotations']['model'];
+        require_once $this->get_manager('services')->conf()->get_modules_conf()->modules->dbcontext->location['custom'].'/'.$methods[0]['annotations']['model'].'.php';
         /**
          * @var entity $entity
          */
@@ -173,8 +174,8 @@ class orm extends command
         file_put_contents("custom/mvc/models/{$modelName}.php", $modelContent);
     }
 
-    private function genere_controller($name = '') {
-        $controllerName = $name === '' ? $this->get_from_name('whole') : $name;
+    private function genere_controller() {
+        $controllerName = $this->get_from_name('whole');
         $controllerContent = "<?php\n\n".
         "\tnamespace ormframework\custom\mvc\controllers;\n\n".
         "\tuse ormframework\core\mvc\Controller;\n\n".
@@ -184,7 +185,7 @@ class orm extends command
     }
 
     private function genere_entity($name = '', $properties = []) {
-        $entityName = $name === '' ? $this->get_from_name('whole') : $name;
+        $entityName = $this->get_from_name('whole');
 		$entityContent = "<?php\n\n".
         "\tnamespace ormframework\custom\db_context;\n\n".
         "\tuse \ormframework\core\db_context\\entity;\n\n".
@@ -273,10 +274,10 @@ class orm extends command
      * génère un ensemble (whole) de model, controllers, entities en fonction d'une bdd sql ou json
      * @param string $name
      */
-    public function new_whole($name = '') {
-        $this->genere_controller($name);
-        $this->genere_model($name);
-        $this->genere_entity($name);
+    public function new_whole() {
+        $this->genere_controller();
+        $this->genere_entity();
+        $this->genere_model();
     }
 
 	/**

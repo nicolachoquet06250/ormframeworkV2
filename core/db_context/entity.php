@@ -14,6 +14,7 @@ class entity extends utils
     protected $request, $autosave;
     public function __construct(IRequest $request = null, $autosave = false, $fields = [])
     {
+        $this->before_construct();
         $this->request($request);
         $this->autosave($autosave);
         foreach ($fields as $champ => $value) {
@@ -21,6 +22,7 @@ class entity extends utils
                 $this->$champ = $value;
             }
         }
+        $this->after_construct();
     }
 
     public function __call($name, $arguments = [])
@@ -36,6 +38,9 @@ class entity extends utils
         }
         return $this->$name;
     }
+
+    protected function before_construct() {}
+    protected function after_construct() {}
 
     /**
      * @return array

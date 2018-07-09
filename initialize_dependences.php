@@ -82,6 +82,8 @@ class initialize_dependences extends utils
                     parcour_dir($module->location['custom'], $module->location['custom'], $body);
 
                     file_put_contents("{$module->location['custom']}/autoload.php", $start . $body . $end);
+
+                    file_put_contents("{$module->location['core']}/autoload.php", $start.$end);
                 }
                 else {
                     if ($module->autoload['core']) {
